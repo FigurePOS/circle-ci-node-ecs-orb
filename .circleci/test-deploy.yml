@@ -22,20 +22,57 @@ release-filters: &release-filters
 jobs:
   # Create jobs to test the commands of your orbs.
   # You may want to add additional validation steps to ensure the commands are working as expected.
-  command-test:
+  validate-test:
     docker:
-      - image: cimg/base:current
+      - image: figurepos/aws-node-terraform:node20
     steps:
       - checkout
-      # Run your orb's commands to validate them.
-      - terraform/greet
+      - terraform/validate:
+          account_id: "880892332156"
+          dir: test
+  deploy_dev-test:
+    docker:
+      - image: figurepos/aws-node-terraform:node20
+    steps:
+      - checkout
+      - terraform/deploy_dev:
+          account_id: "880892332156"
+          dir: test
+
+  plan_prod-test:
+    docker:
+      - image: figurepos/aws-node-terraform:node20
+    steps:
+      - checkout
+      - terraform/plan_prod:
+          account_id: "682919404744"
+          dir: test
+
+  deploy_prod-test:
+    docker:
+      - image: figurepos/aws-node-terraform:node20
+    steps:
+      - checkout
+      - terraform/deploy_prod:
+          account_id: "682919404744"
+          dir: test
 workflows:
   test-deploy:
     jobs:
-      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      # Test your orb's commands in a custom job and test your orb's jobs directly as a part of this workflow.
-      - command-test:
+      - validate-test:
+          context: node
           filters: *filters
+      - deploy_dev-test:
+          context: node
+          filters: *filters
+      - plan_prod-test:
+          context: node
+          filters: *filters
+      - deploy_prod-test:
+          context: node
+          filters: *filters
+          requires:
+            - plan_prod-test
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -46,6 +83,9 @@ workflows:
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
-            - command-test
+            - validate-test
+            - deploy_dev-test
+            - plan_prod-test
+            - deploy_prod-test
           context: orb-publishing
           filters: *release-filters

@@ -1,13 +1,42 @@
 description: >
-  Sample example description.
-# Provide a use-case based example for using this orb.
-# Everything in the `usage` section will be displayed in the orb registry.
-# Comments are not retained.
+  Typical usecase for:
+  - validation and production plan on every push
+  - deploy to dev on push to master
+  - deploy to prod after approval
+
 usage:
   version: 2.1
   orbs:
-    <orb-name>: <namespace>/<orb-name>@1.2.3
+    <orb-name>: figure/terraform@1.0.0
   workflows:
-    use-my-orb:
+    validate_and_deploy:
+      name: Terraform Validation and Deploy
       jobs:
-        - <orb-name>/<job-name>
+        - validate:
+            parameters:
+              account_id: "880892332156"
+        - deploy_dev:
+            requires:
+              - validate
+            filters:
+              branches:
+                only: master
+            parameters:
+              account_id: "880892332156"
+        - plan_prod:
+            requires:
+              - validate
+            parameters:
+              account_id: "682919404744"
+        - approve_deploy_prod:
+            requires:
+              - plan_prod
+            type: approval
+            filters:
+              branches:
+                only: master
+        - deploy_prod:
+            requires:
+              - approve_deploy_prod
+            parameters:
+              account_id: "682919404744"

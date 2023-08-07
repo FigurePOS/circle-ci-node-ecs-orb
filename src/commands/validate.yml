@@ -1,0 +1,55 @@
+description: >
+  Validate terraform scripts and check them using Checkov.
+
+parameters:
+  account_id:
+    type: string
+    description: "AWS Account ID"
+  dir:
+    type: string
+    default: "tf"
+    description: "Directory of terraform scripts"
+
+steps:
+  - run:
+      name: Terraform Init
+      environment:
+        ACCOUNT_ID: <<parameters.account_id>>
+        DIR: <<parameters.dir>>
+        ENV: "development"
+        ROLE_NAME: "TerraformDeployer"
+        SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
+        SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
+      command: <<include(scripts/terraform-init.sh)>>
+  - run:
+      name: Terraform Format
+      environment:
+        DIR: <<parameters.dir>>
+      command: |
+        cd $DIR
+        terraform fmt
+  - run:
+      name: Terraform Validate
+      environment:
+        DIR: <<parameters.dir>>
+      command: |
+        cd $DIR
+        terraform validate
+  - run:
+      name: Checkov Static Check
+      environment:
+        DIR: <<parameters.dir>>
+      command: |
+        cd $DIR
+        checkov -d . --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform.yaml
+  - run:
+      name: Checkov Plan Check
+      environment:
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SECRET_ACCESS_KEY: ""
+        DIR: <<parameters.dir>>
+        ENV: "development"
+        ROLE_NAME: "TerraformDeployer"
+        TF_VAR_aws_profile: "assumed-role"
+        TF_VAR_env: "development"
+      command: <<include(scripts/checkov-plan.sh)>>

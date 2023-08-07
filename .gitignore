@@ -2,3 +2,5 @@
 orb.yml
 .DS_Store
 *.code-workspace
+.terraform
+tfplan.binary
