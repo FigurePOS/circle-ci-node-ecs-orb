@@ -1,0 +1,11 @@
+version: 2.1
+
+description: >
+  The orb provides worflow for validation and deployment of terraform scripts.
+
+display:
+  source_url: "https://github.com/FigurePOS/circle-ci-terraform-orb"
+
+orbs:
+  hello: circleci/terraform@3.2.1
+
