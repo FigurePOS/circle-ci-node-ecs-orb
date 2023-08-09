@@ -1,5 +1,5 @@
 description: >
-  terraform deploy
+  terraform validate and scan for vulnerabilities
 
 executor: default
 
@@ -11,12 +11,8 @@ parameters:
     type: string
     default: "tf"
     description: "Dir with terraform scripts"
-  env:
-    type: string
-    description: "Environment"
 
 steps:
-  - deploy:
-      account_id: <<parameters.account_id>>
-      dir: <<parameters.dir>>
-      env: <<parameters.env>>
+  - terraform_validate:
+      account_id: << parameters.account_id >>
+      dir: << parameters.dir >>

@@ -4,7 +4,7 @@ orbs:
   # Reference your orb's jobs and commands below as they will exist when built.
   orb-tools: circleci/orb-tools@12.0
   # The orb definition is intentionally not included here. It will be injected into the pipeline.
-  terraform: {}
+  node-ecs: {}
 
 # Use this tag to ensure test jobs always run,
 # even though the downstream publish job will only run on release tags.
@@ -20,19 +20,31 @@ release-filters: &release-filters
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
-  test-jobs:
+  test-terraform_plan:
     docker:
       - image: figurepos/aws-node-terraform:node20
     steps:
       - checkout
-      - terraform/plan:
+      - node-ecs/terraform_plan:
           account_id: "880892332156"
           dir: test
           env: development
-      - terraform/validate:
+
+  test-terraform_validate:
+    docker:
+      - image: figurepos/aws-node-terraform:node20
+    steps:
+      - checkout
+      - node-ecs/terraform_validate:
           account_id: "880892332156"
           dir: test
-      - terraform/deploy:
+
+  test-terraform_deploy:
+    docker:
+      - image: figurepos/aws-node-terraform:node20
+    steps:
+      - checkout
+      - node-ecs/terraform_deploy:
           account_id: "880892332156"
           dir: test
           env: development
@@ -40,19 +52,31 @@ jobs:
 workflows:
   test-deploy:
     jobs:
-      - test-jobs:
+      - test-terraform_plan:
           context: node
+          filters: *filters
+      - test-terraform_validate:
+          context: node
+          requires:
+            - test-terraform_plan
+          filters: *filters
+      - test-terraform_deploy:
+          context: node
+          requires:
+            - test-terraform_plan
           filters: *filters
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
-          orb_name: figure/terraform
+          orb_name: figure/node-ecs
           vcs_type: << pipeline.project.type >>
           pub_type: production
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
-            - test-jobs
+            - test-terraform_plan
+            - test-terraform_validate
+            - test-terraform_deploy
           context: orb-publishing
           filters: *release-filters

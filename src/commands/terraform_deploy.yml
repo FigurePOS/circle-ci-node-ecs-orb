@@ -36,7 +36,8 @@ steps:
         TF_VAR_env: <<parameters.dir>>
       command: |
         cd $DIR
-        if [ -f /tmp/workspace/tfplan.binary ];  then
+        if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
+        then
           terraform apply --auto-approve /tmp/workspace/tfplan.binary;
         else
           echo "No plan found."

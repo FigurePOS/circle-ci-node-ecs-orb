@@ -1,5 +1,5 @@
 description: >
-  terraform plan
+  terraform deploy
 
 executor: default
 
@@ -16,7 +16,7 @@ parameters:
     description: "Environment"
 
 steps:
-  - plan:
+  - terraform_deploy:
       account_id: <<parameters.account_id>>
       dir: <<parameters.dir>>
       env: <<parameters.env>>
