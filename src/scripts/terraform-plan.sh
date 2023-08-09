@@ -8,12 +8,12 @@ fi
 
 cd "$DIR" || exit
 
-if terraform plan -detailed-exitcode --out tfplan.binary;
+if terraform plan -detailed-exitcode --out /tmp/tfplan.binary;
 then
-    terraform show tfplan.binary
-    echo "export TF_PLAN_CHANGED=true" >> "$BASH_ENV"
+    terraform show /tmp/tfplan.binary
 else
     echo "No changes detected."
 fi
+
 
 

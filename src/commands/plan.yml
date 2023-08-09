@@ -5,9 +5,6 @@ parameters:
   account_id:
     type: string
     description: "AWS Account ID"
-  deploy:
-    type: env_var_name
-    default: TF_PLAN_CHANGED
   dir:
     type: string
     default: "tf"
@@ -43,10 +40,12 @@ steps:
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>
-  - when:
-      condition:
-        equal: [ true, "${<< parameters.deploy >>}" ]
-      steps:
-        - persist_to_workspace:
-            root: .
-            paths: [tfplan.binary]
+  - persist_to_workspace:
+      root: /tmp
+      paths: [tfplan.binary]
+  - attach_workspace:
+      at: /tmp/workspace
+  - run:
+      name: DEBUG
+      command: ls -la /tmp/workspace
+

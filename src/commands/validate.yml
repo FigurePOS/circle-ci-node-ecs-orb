@@ -43,7 +43,7 @@ steps:
         cd $DIR
         checkov -d . --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform.yaml
   - attach_workspace:
-      at: /tmp
+      at: /tmp/workspace
   - run:
       name: Checkov Plan Check
       environment:
@@ -54,4 +54,10 @@ steps:
         ROLE_NAME: "TerraformDeployer"
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: "development"
-      command: <<include(scripts/checkov-plan.sh)>>
+      command: |
+        cd $DIR
+        if [ -f /tmp/workspace/tfplan.binary ]; then
+          checkov -f /tmp/workspace/tfplan.binary --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
+        else
+          echo "No changes in the plan."
+        fi
