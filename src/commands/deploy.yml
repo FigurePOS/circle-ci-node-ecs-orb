@@ -25,7 +25,7 @@ steps:
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
       command: <<include(scripts/terraform-init.sh)>>
   - attach_workspace:
-      at: /tmp
+      at: /tmp/workspace
   - run:
       name: Terraform Deploy
       environment:
@@ -36,6 +36,8 @@ steps:
         TF_VAR_env: <<parameters.dir>>
       command: |
         cd $DIR
-        if [ -f /tmp/tfplan.binary/tfplan.binary ];  then
-          terraform apply --auto-approve /tmp/tfplan.binary/tfplan.binary;
+        if [ -f /tmp/workspace/tfplan.binary ];  then
+          terraform apply --auto-approve /tmp/workspace/tfplan.binary;
+        else
+          echo "No plan found."
         fi
