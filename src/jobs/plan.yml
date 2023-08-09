@@ -1,0 +1,22 @@
+description: >
+  terraform plan
+
+executor: default
+
+parameters:
+  account_id:
+    type: string
+    description: "AWS Account ID"
+  dir:
+    type: string
+    default: "tf"
+    description: "Dir with terraform scripts"
+  env:
+    type: string
+    description: "Environment"
+
+steps:
+  - plan:
+      account_id: <<parameters.account_id>>
+      dir: <<parameters.dir>>
+      env: <<parameters.env>>

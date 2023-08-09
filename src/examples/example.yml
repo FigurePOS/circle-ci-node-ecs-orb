@@ -12,22 +12,32 @@ usage:
     validate_and_deploy:
       name: Terraform Validation and Deploy
       jobs:
-        - validate:
+        - <orb-name>/plan:
+            name: plan_dev
             parameters:
               account_id: "880892332156"
-        - deploy_dev:
+              env: development
+        - <orb-name>/plan:
+            name: plan_prod
+            parameters:
+              account_id: "682919404744"
+              env: production
+        - <orb-name>/validate:
+            name: validate
+            parameters:
+              account_id: "880892332156"
             requires:
-              - validate
+              - plan_dev
+        - <orb-name>/deploy:
+            name: deploy_dev
+            parameters:
+              account_id: "880892332156"
+              env: development
+            requires:
+              - plan_dev
             filters:
               branches:
                 only: master
-            parameters:
-              account_id: "880892332156"
-        - plan_prod:
-            requires:
-              - validate
-            parameters:
-              account_id: "682919404744"
         - approve_deploy_prod:
             requires:
               - plan_prod
@@ -35,8 +45,9 @@ usage:
             filters:
               branches:
                 only: master
-        - deploy_prod:
+        - <orb-name>/deploy:
             requires:
               - approve_deploy_prod
             parameters:
               account_id: "682919404744"
+              env: production

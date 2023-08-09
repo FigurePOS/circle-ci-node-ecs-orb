@@ -1,5 +1,5 @@
 description: >
-  Deploy terraform to dev.
+  Deploy terraform to prod after approval.
 
 parameters:
   account_id:
@@ -7,11 +7,14 @@ parameters:
     description: "AWS Account ID"
   deploy:
     type: env_var_name
-    default: DEPLOY_TF
+    default: TF_PLAN_CHANGED
   dir:
     type: string
     default: "tf"
     description: "Directory of terraform scripts"
+  env:
+    type: string
+    description: "Environment"
 
 steps:
   - run:
@@ -19,7 +22,7 @@ steps:
       environment:
         ACCOUNT_ID: <<parameters.account_id>>
         DIR: <<parameters.dir>>
-        ENV: "development"
+        ENV: <<parameters.env>>
         ROLE_NAME: "TerraformDeployer"
         SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
@@ -38,20 +41,12 @@ steps:
         AWS_SECRET_ACCESS_KEY: ""
         DIR: <<parameters.dir>>
         TF_VAR_aws_profile: "assumed-role"
-        TF_VAR_env: "development"
+        TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>
   - when:
       condition:
         equal: [ true, "${<< parameters.deploy >>}" ]
       steps:
-        - run:
-            name: Terraform Deploy
-            environment:
-              AWS_ACCESS_KEY_ID: ""
-              AWS_SECRET_ACCESS_KEY: ""
-              DIR: <<parameters.dir>>
-              TF_VAR_aws_profile: "assumed-role"
-              TF_VAR_env: "development"
-            command: |
-              cd $DIR
-              terraform apply --auto-approve tfplan.binary
+        - persist_to_workspace:
+            root: .
+            paths: [tfplan.binary]

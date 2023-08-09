@@ -14,8 +14,8 @@ fi
 
 cd "$DIR" || exit
 
-terraform plan --out tfplan.binary
-terraform show -json tfplan.binary > tfplan.json
-if [ -f "tfplan.json" ]; then
-    checkov -f tfplan.json --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
+if [ -f /tmp/tfplan.binary/tfplan.binary ]; then
+    checkov -f /tmp/tfplan.binary/tfplan.binary --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
+else
+    echo "No changes in the plan."
 fi

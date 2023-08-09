@@ -20,59 +20,29 @@ release-filters: &release-filters
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
-  # Create jobs to test the commands of your orbs.
-  # You may want to add additional validation steps to ensure the commands are working as expected.
-  validate-test:
+  test-jobs:
     docker:
       - image: figurepos/aws-node-terraform:node20
     steps:
       - checkout
+      - terraform/plan:
+          account_id: "880892332156"
+          dir: test
+          env: development
       - terraform/validate:
           account_id: "880892332156"
           dir: test
-  deploy_dev-test:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
-    steps:
-      - checkout
-      - terraform/deploy_dev:
+      - terraform/deploy:
           account_id: "880892332156"
           dir: test
+          env: development
 
-  plan_prod-test:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
-    steps:
-      - checkout
-      - terraform/plan_prod:
-          account_id: "682919404744"
-          dir: test
-
-  deploy_prod-test:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
-    steps:
-      - checkout
-      - terraform/deploy_prod:
-          account_id: "682919404744"
-          dir: test
 workflows:
   test-deploy:
     jobs:
-      - validate-test:
+      - test-jobs:
           context: node
           filters: *filters
-      - deploy_dev-test:
-          context: node
-          filters: *filters
-      - plan_prod-test:
-          context: node
-          filters: *filters
-      - deploy_prod-test:
-          context: node
-          filters: *filters
-          requires:
-            - plan_prod-test
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -83,9 +53,6 @@ workflows:
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
-            - validate-test
-            - deploy_dev-test
-            - plan_prod-test
-            - deploy_prod-test
+            - test-jobs
           context: orb-publishing
           filters: *release-filters

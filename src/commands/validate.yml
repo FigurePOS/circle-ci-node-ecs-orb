@@ -42,6 +42,8 @@ steps:
       command: |
         cd $DIR
         checkov -d . --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform.yaml
+  - attach_workspace:
+      at: /tmp
   - run:
       name: Checkov Plan Check
       environment:

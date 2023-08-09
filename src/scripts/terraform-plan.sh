@@ -11,7 +11,7 @@ cd "$DIR" || exit
 if terraform plan -detailed-exitcode --out tfplan.binary;
 then
     terraform show tfplan.binary
-    echo "export DEPLOY_TF=true" >> "$BASH_ENV"
+    echo "export TF_PLAN_CHANGED=true" >> "$BASH_ENV"
 else
     echo "No changes detected."
 fi
