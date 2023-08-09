@@ -56,8 +56,10 @@ steps:
         TF_VAR_env: "development"
       command: |
         cd $DIR
-        if [ -f /tmp/workspace/tfplan.binary ]; then
-          checkov -f /tmp/workspace/tfplan.binary --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
+        if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
+        then
+          terraform show -json /tmp/workspace/tfplan.binary > tfplan.json
+          checkov -f tfplan.json --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
         else
           echo "No changes in the plan."
         fi

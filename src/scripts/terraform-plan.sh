@@ -10,9 +10,12 @@ cd "$DIR" || exit
 
 if terraform plan -detailed-exitcode --out /tmp/tfplan.binary;
 then
-    terraform show /tmp/tfplan.binary
-else
+    rm -rf /tmp/tfplan.binary
     echo "No changes detected."
+    echo "false" > /tmp/tfplan.change
+else
+    echo "true" > /tmp/tfplan.change
+    terraform show -json /tmp/tfplan.binary > /tmp/tfplan.json
 fi
 
 

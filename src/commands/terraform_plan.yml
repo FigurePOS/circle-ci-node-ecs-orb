@@ -42,10 +42,9 @@ steps:
       command: <<include(scripts/terraform-plan.sh)>>
   - persist_to_workspace:
       root: /tmp
-      paths: [tfplan.binary]
-  - attach_workspace:
-      at: /tmp/workspace
-  - run:
-      name: DEBUG
-      command: ls -la /tmp/workspace
+      paths: [tfplan.binary, tfplan.change]
+  - store_artifacts:
+      path: /tmp/tfplan.json
+      destination: <<parameters.env>>-tfplan.json
+
 

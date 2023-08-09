@@ -7,7 +7,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    fgr_terraform: figure/terraform@1.0.0
+    node-ecs: figure/node-ecs@1.0.0
 
   workflows:
     terraform_validation_deploy:
@@ -48,10 +48,10 @@ usage:
         - image: figurepos/aws-node-terraform:node20
       steps:
         - checkout
-        - fgr_terraform/plan:
+        - node-ecs/terraform_plan:
             account_id: "880892332156"
             env: development
-        - fgr_terraform/validate:
+        - node-ecs/terraform_validate:
             account_id: "880892332156"
 
     terraform_deploy_dev:
@@ -59,7 +59,7 @@ usage:
         - image: figurepos/aws-node-terraform:node20
       steps:
         - checkout
-        - fgr_terraform/deploy:
+        - node-ecs/terraform_deploy:
             account_id: "880892332156"
             env: development
 
@@ -68,7 +68,7 @@ usage:
         - image: figurepos/aws-node-terraform:node20
       steps:
         - checkout
-        - fgr_terraform/plan:
+        - node-ecs/terraform_plan:
             account_id: "682919404744"
             env: production
 
@@ -77,6 +77,6 @@ usage:
         - image: figurepos/aws-node-terraform:node20
       steps:
         - checkout
-        - fgr_terraform/deploy:
+        - node-ecs/terraform_deploy:
             account_id: "682919404744"
             env: production
