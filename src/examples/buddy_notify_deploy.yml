@@ -1,0 +1,22 @@
+description: >
+  Notify buddy about deployment
+
+usage:
+  version: 2.1
+  orbs:
+    node-ecs: figure/node-ecs@1.0.0
+
+  jobs:
+    deploy_development:
+      docker:
+        - image: figurepos/aws-node-terraform:node20
+      steps:
+        - checkout
+        - run:
+            name: "Deploy DEVELOPMENT"
+            command: |
+              ./scripts/deploy.sh ${version:-${CIRCLE_SHA1:0:7}} 880892332156 development "fgr-service-business-config" "true" "/business-config"
+        - node-ecs/buddy_notify_deploy:
+            service_name: "fgr-service-business-config"
+            trigger_url: "https://buddy.figure.dev/notify"
+        - slack/notify

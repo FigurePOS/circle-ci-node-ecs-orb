@@ -1,0 +1,18 @@
+description: >
+  notify buddy about deploy
+
+parameters:
+  service_name:
+    type: string
+    description: "Service Name"
+  trigger_url:
+    type: string
+    description: "Trigger URL"
+
+steps:
+  - run:
+      name: Notify buddy about deployment
+      environment:
+        SERVICE_NAME: <<parameters.service_name>>
+        TRIGGER_URL: <<parameters.trigger_url>>
+      command: <<include(scripts/buddy-notify-deploy.sh)>>
