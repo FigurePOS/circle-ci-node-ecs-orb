@@ -37,14 +37,15 @@ steps:
         AWS_ACCESS_KEY_ID: ""
         AWS_SECRET_ACCESS_KEY: ""
         DIR: <<parameters.dir>>
+        ENV: <<parameters.env>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>
   - persist_to_workspace:
       root: /tmp
-      paths: [tfplan.binary, tfplan.change]
+      paths: [<<parameters.env>>-tfplan.binary, <<parameters.env>>-tfplan.change]
   - store_artifacts:
-      path: /tmp/tfplan.json
+      path: /tmp/<<parameters.env>>-tfplan.json
       destination: <<parameters.env>>-tfplan.json
 
 

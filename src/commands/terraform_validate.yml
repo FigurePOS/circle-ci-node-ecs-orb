@@ -47,6 +47,11 @@ steps:
   - attach_workspace:
       at: /tmp/workspace
   - run:
+      name: Assess Plan Change
+      environment:
+        ENV: "development"
+      command: <<include(scripts/cancel-job.sh)>>
+  - run:
       name: Checkov Plan Check
       environment:
         AWS_ACCESS_KEY_ID: ""
@@ -57,13 +62,5 @@ steps:
         ROLE_NAME: "TerraformDeployer"
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: "development"
-      command: |
-        cd $DIR
-        if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
-        then
-          terraform show -json /tmp/workspace/tfplan.binary > tfplan.json
-          echo "$CHECKOV_CONFIG" > .checkov.yml
-          checkov -f tfplan.json --config-file .checkov.yml
-        else
-          echo "No changes in the plan."
-        fi
+      command: <<include(scripts/checkov-plan-check.sh)>>
+
