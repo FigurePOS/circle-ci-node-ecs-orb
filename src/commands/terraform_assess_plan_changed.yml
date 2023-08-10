@@ -1,0 +1,14 @@
+description: >
+  terraform assess plan changed
+
+parameters:
+  env:
+    type: string
+    description: "Environment"
+
+steps:
+  - attach_workspace:
+      at: /tmp/workspace
+  - run:
+      name: Assess Plan Change
+      command: <<include(scripts/cancel-workflow.sh)>>

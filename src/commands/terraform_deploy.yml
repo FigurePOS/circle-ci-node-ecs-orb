@@ -26,6 +26,13 @@ steps:
       command: <<include(scripts/terraform-init.sh)>>
   - attach_workspace:
       at: /tmp/workspace
+  - attach_workspace:
+      at: /tmp/workspace
+  - run:
+      name: Assess Plan Change
+      environment:
+        ENV: "development"
+      command: <<include(scripts/cancel-job.sh)>>
   - run:
       name: Terraform Deploy
       environment:
@@ -35,11 +42,4 @@ steps:
         ENV: <<parameters.env>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.dir>>
-      command: |
-        cd $DIR
-        if [ -f /tmp/workspace/"$ENV"-tfplan.binary ] && [[ `cat /tmp/workspace/"$ENV"-tfplan.change` == "true" ]];
-        then
-          terraform apply --auto-approve /tmp/workspace/"$ENV"-tfplan.binary;
-        else
-          echo "No plan found."
-        fi
+      command: <<include(scripts/terraform-deploy.sh)>>

@@ -1,0 +1,13 @@
+description: >
+  terraform assess plan changed
+
+executor: node20
+
+parameters:
+  env:
+    type: string
+    description: "Environment"
+
+steps:
+  - terraform_assess_plan_changed:
+      env: <<parameters.env>>
