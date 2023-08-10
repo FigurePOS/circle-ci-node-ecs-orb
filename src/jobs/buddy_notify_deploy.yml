@@ -1,0 +1,17 @@
+description: >
+  notify buddy about deploy
+
+executor: default
+
+parameters:
+  service_name:
+    type: string
+    description: "Service Name"
+  trigger_url:
+    type: string
+    description: "Trigger URL"
+
+steps:
+  - buddy_notify_deploy:
+      service_name: <<parameters.service_name>>
+      trigger_url: <<parameters.trigger_url>>
