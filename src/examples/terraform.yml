@@ -7,7 +7,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    node-ecs: figure/node-ecs@1.0.0
+    node-ecs: figure/node-ecs@1.4.0
 
   workflows:
     terraform_validation_deploy:
@@ -15,11 +15,16 @@ usage:
         - terraform_plan_dev:
             context:
               - node
-        - terraform_deploy_dev:
+        - terraform_validate:
             context:
               - node
             requires:
               - terraform_plan_dev
+        - terraform_deploy_dev:
+            context:
+              - node
+            requires:
+              - terraform_validate
             filters:
               branches:
                 only: master
@@ -27,9 +32,10 @@ usage:
             context:
               - node
         - approve_terraform_deploy_prod:
-            requires:
-              - terraform_plan_prod
             type: approval
+            requires:
+              - terraform_validate
+              - terraform_plan_prod
             filters:
               branches:
                 only: master
@@ -44,19 +50,25 @@ usage:
 
   jobs:
     terraform_plan_dev:
-      docker:
-        - image: figurepos/aws-node-terraform:node20
+      description: "Terraform Plan for Development"
+      executor: node-ecs/node20
       steps:
         - checkout
         - node-ecs/terraform_plan:
             account_id: "880892332156"
             env: development
+
+    terraform_validate:
+      description: "Terraform Validation"
+      executor: node-ecs/node20
+      steps:
+        - checkout
         - node-ecs/terraform_validate:
             account_id: "880892332156"
 
     terraform_deploy_dev:
-      docker:
-        - image: figurepos/aws-node-terraform:node20
+      description: "Terraform Deployment to Development"
+      executor: node-ecs/node20
       steps:
         - checkout
         - node-ecs/terraform_deploy:
@@ -64,8 +76,8 @@ usage:
             env: development
 
     terraform_plan_prod:
-      docker:
-        - image: figurepos/aws-node-terraform:node20
+      description: "Terraform Plan for Production"
+      executor: node-ecs/node20
       steps:
         - checkout
         - node-ecs/terraform_plan:
@@ -73,8 +85,8 @@ usage:
             env: production
 
     terraform_deploy_prod:
-      docker:
-        - image: figurepos/aws-node-terraform:node20
+      description: "Terraform Deployment to Production"
+      executor: node-ecs/node20
       steps:
         - checkout
         - node-ecs/terraform_deploy:

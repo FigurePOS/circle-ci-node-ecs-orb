@@ -1,4 +1,4 @@
 description: >
-  Default executor for terraform orb.
+  Default executor for terraform orb running Node v20.
 docker:
   - image: 'figurepos/aws-node-terraform:node20'
