@@ -32,13 +32,14 @@ steps:
         AWS_ACCESS_KEY_ID: ""
         AWS_SECRET_ACCESS_KEY: ""
         DIR: <<parameters.dir>>
+        ENV: <<parameters.env>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.dir>>
       command: |
         cd $DIR
-        if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
+        if [ -f /tmp/workspace/"$ENV"-tfplan.binary ] && [[ `cat /tmp/workspace/"$ENV"-tfplan.change` == "true" ]];
         then
-          terraform apply --auto-approve /tmp/workspace/tfplan.binary;
+          terraform apply --auto-approve /tmp/workspace/"$ENV"-tfplan.binary;
         else
           echo "No plan found."
         fi

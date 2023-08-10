@@ -6,16 +6,22 @@ then
       exit 1
 fi
 
+if [ -z "$ENV" ]
+then
+      echo "ENV is empty"
+      exit 1
+fi
+
 cd "$DIR" || exit
 
-if terraform plan -detailed-exitcode --out /tmp/tfplan.binary;
+if terraform plan -detailed-exitcode --out /tmp/"$ENV"-tfplan.binary;
 then
-    rm -rf /tmp/tfplan.binary
+    rm -rf /tmp/"$ENV"-tfplan.binary
     echo "No changes detected."
-    echo "false" > /tmp/tfplan.change
+    echo "false" > /tmp/"$ENV"-tfplan.change
 else
-    echo "true" > /tmp/tfplan.change
-    terraform show -json /tmp/tfplan.binary > /tmp/tfplan.json
+    echo "true" > /tmp/"$ENV"-tfplan.change
+    terraform show -json /tmp/"$ENV"-tfplan.binary > /tmp/"$ENV"-tfplan.json
 fi
 
 

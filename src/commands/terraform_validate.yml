@@ -59,9 +59,9 @@ steps:
         TF_VAR_env: "development"
       command: |
         cd $DIR
-        if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
+        if [ -f /tmp/workspace/"$ENV"-tfplan.binary ] && [[ `cat /tmp/workspace/"$ENV"-tfplan.change` == "true" ]];
         then
-          terraform show -json /tmp/workspace/tfplan.binary > tfplan.json
+          terraform show -json /tmp/workspace/"$ENV"-tfplan.binary > tfplan.json
           echo "$CHECKOV_CONFIG" > .checkov.yml
           checkov -f tfplan.json --config-file .checkov.yml
         else
