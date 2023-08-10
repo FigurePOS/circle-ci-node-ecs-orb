@@ -1,5 +1,7 @@
-skip-check: 
+framework: terraform_plan
+skip-check:
   - CKV_AWS_158 # Ensure that CloudWatch Log Group is encrypted by KMS (https://docs.bridgecrew.io/docs/ensure-that-cloudwatch-log-group-is-encrypted-by-kms) - skipped because we don't have a custom KMS key yet
   - CKV_AWS_336 # Ensure ECS containers are limited to read-only access to root filesystems - skipped because datadog-agent needs it (see https://github.com/DataDog/datadog-agent/issues/15127) and we are injecting the container definition on runtime so the validator can't see it
   - CKV_AWS_337 # Ensure SSM parameters are using KMS CMK - skipped because we don't have a custom KMS key yet
   - CKV_TF_1 # Ensure Terraform module sources use a commit hash - skipped becase we don't want to be that hard yet
+  - CKV2_AWS_34 # Ensure AWS SSM Parameter is encrypted (https://docs.bridgecrew.io/docs/ensure-aws-ssm-parameter-is-encrypted) - skipped because we use SSM also to store parameters that are not secrets

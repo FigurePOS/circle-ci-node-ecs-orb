@@ -39,9 +39,11 @@ steps:
       name: Checkov Static Check
       environment:
         DIR: <<parameters.dir>>
+        CHECKOV_CONFIG: <<include(.checkov.terraform.yml)>>
       command: |
         cd $DIR
-        checkov -d . --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform.yaml
+        echo "$CHECKOV_CONFIG" > .checkov.yml
+        checkov -d . --config-file .checkov.yml
   - attach_workspace:
       at: /tmp/workspace
   - run:
@@ -49,6 +51,7 @@ steps:
       environment:
         AWS_ACCESS_KEY_ID: ""
         AWS_SECRET_ACCESS_KEY: ""
+        CHECKOV_CONFIG: <<include(.checkov.terraform-plan.yml)>>
         DIR: <<parameters.dir>>
         ENV: "development"
         ROLE_NAME: "TerraformDeployer"
@@ -59,7 +62,8 @@ steps:
         if [ -f /tmp/workspace/tfplan.binary ] && [[ `cat /tmp/workspace/tfplan.change` == "true" ]];
         then
           terraform show -json /tmp/workspace/tfplan.binary > tfplan.json
-          checkov -f tfplan.json --config-file "$CIRCLE_WORKING_DIRECTORY"/.checkov.terraform-plan.yaml
+          echo "$CHECKOV_CONFIG" > .checkov.yml
+          checkov -f tfplan.json --config-file .checkov.yml
         else
           echo "No changes in the plan."
         fi
