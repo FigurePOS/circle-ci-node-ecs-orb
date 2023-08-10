@@ -1,7 +1,7 @@
 description: >
   terraform plan
 
-executor: default
+executor: node20
 
 parameters:
   account_id:

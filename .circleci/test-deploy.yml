@@ -21,8 +21,7 @@ release-filters: &release-filters
 
 jobs:
   test-terraform_plan:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
+    executor: node-ecs/node20
     steps:
       - checkout
       - node-ecs/terraform_plan:
@@ -31,8 +30,7 @@ jobs:
           env: development
 
   test-terraform_validate:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
+    executor: node-ecs/node20
     steps:
       - checkout
       - node-ecs/terraform_validate:
@@ -40,8 +38,7 @@ jobs:
           dir: test
 
   test-terraform_deploy:
-    docker:
-      - image: figurepos/aws-node-terraform:node20
+    executor: node-ecs/node20
     steps:
       - checkout
       - node-ecs/terraform_deploy:
