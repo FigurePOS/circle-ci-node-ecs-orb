@@ -18,9 +18,9 @@ then
       exit 1
 fi
 
-if [ -z "$TRIGGER_URL" ]
+if [ -z "$FIGURE_BUDDY_TRIGGER_URL" ]
 then
-      echo "TRIGGER_URL variable is empty"
+      echo "FIGURE_BUDDY_TRIGGER_URL variable is empty"
       exit 1
 fi
 
@@ -31,6 +31,6 @@ curl \
     -X POST \
     -H "Content-type: application/json" \
     --data "{\"type\":\"dev-deployed\",\"service_name\":\"$SERVICE_NAME\",\"commit_message\":\"$commit_message\",\"workflow_id\":\"$CIRCLE_WORKFLOW_ID\"}" \
-    "$TRIGGER_URL"
+    "$FIGURE_BUDDY_TRIGGER_URL"
 
 echo "SUCCESS"
