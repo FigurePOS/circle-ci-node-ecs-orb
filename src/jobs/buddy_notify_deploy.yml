@@ -9,6 +9,7 @@ parameters:
     description: "Service Name"
   trigger_url:
     type: string
+    default: ${FIGURE_BUDDY_TRIGGER_URL}
     description: "Trigger URL"
 
 steps:
