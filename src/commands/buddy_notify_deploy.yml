@@ -6,8 +6,8 @@ parameters:
     type: string
     description: "Service Name"
   trigger_url:
-    type: env_var_name
-    default: FIGURE_BUDDY_TRIGGER_URL
+    type: string
+    default: ${FIGURE_BUDDY_TRIGGER_URL}
     description: "Trigger URL"
 
 steps:
@@ -15,5 +15,5 @@ steps:
       name: Notify buddy about deployment
       environment:
         SERVICE_NAME: <<parameters.service_name>>
-        FIGURE_BUDDY_TRIGGER_URL: <<parameters.trigger_url>>
+        TRIGGER_URL: <<parameters.trigger_url>>
       command: <<include(scripts/buddy-notify-deploy.sh)>>
