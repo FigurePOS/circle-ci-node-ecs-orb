@@ -9,31 +9,5 @@ parameters:
     description: "Service Name"
 
 steps:
-  - slack/notify:
-      branch_pattern: master
-      event: fail
-      custom: |
-        {
-          "blocks": [
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": ":interrobang: *<<parameters.service_name>>*: Execution of job `${CIRCLE_JOB}` failed (`${CIRCLE_SHA1:0:7}`) :interrobang:"
-              }
-            },
-            {
-              "type": "actions",
-              "elements": [
-                {
-                  "type": "button",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "View Job"
-                  },
-                  "url": "${CIRCLE_BUILD_URL}"
-                }
-              ]
-            }
-          ]
-        }
+  - slack_notify_fail_master:
+      service_name: <<parameters.service_name>>
