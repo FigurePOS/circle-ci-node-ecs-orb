@@ -4,6 +4,7 @@ description: >
 parameters:
   service_name:
     type: string
+    default: ${CIRCLE_PROJECT_REPONAME}
     description: "Service Name"
 
 steps:
