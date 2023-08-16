@@ -15,5 +15,4 @@ usage:
             name: "Deploy DEVELOPMENT"
             command: |
               ./scripts/deploy.sh ${version:-${CIRCLE_SHA1:0:7}} 880892332156 development "fgr-service-business-config" "true" "/business-config"
-        - node-ecs/slack_notify_fail_master:
-            service_name: "fgr-service-business-config"
+        - node-ecs/slack_notify_fail_master
