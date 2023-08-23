@@ -25,13 +25,6 @@ steps:
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
       command: <<include(scripts/terraform-init.sh)>>
   - run:
-      name: Terraform Format
-      environment:
-        DIR: <<parameters.dir>>
-      command: |
-        cd $DIR
-        terraform fmt
-  - run:
       name: Terraform Plan
       environment:
         AWS_ACCESS_KEY_ID: ""

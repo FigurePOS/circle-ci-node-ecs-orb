@@ -11,8 +11,13 @@ parameters:
     type: string
     default: "tf"
     description: "Dir with terraform scripts"
+  run_checkov:
+    type: boolean
+    default: true
+    description: "Whether to run checkov security checks or not"
 
 steps:
   - terraform_validate:
       account_id: << parameters.account_id >>
       dir: << parameters.dir >>
+      run_checkov: << parameters.run_checkov >>
