@@ -1,0 +1,22 @@
+description: >
+  setup pipeline config according to changed folders
+
+executor: path-filtering/default
+
+resource_class: small
+
+steps:
+  - checkout
+  - path-filtering/set-parameters:
+      base-revision: master
+      mapping: |
+        lambda/.* lambda true
+        tf/.* tf true
+      output-path: /tmp/pipeline-parameters.json
+  - generate_config:
+      pipeline_parameters_json_file: /tmp/pipeline-parameters.json
+  - run:
+      name: "Print generated config"
+      command: cat /tmp/generated-config.yml
+  - continuation/continue:
+      configuration_path: /tmp/generated-config.yml
