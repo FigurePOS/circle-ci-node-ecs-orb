@@ -1,0 +1,14 @@
+description: >
+  Setup pipeline config according to changed folders
+
+usage:
+  version: 2.1
+  orbs:
+    node-ecs: figure/node-ecs@1.7.0
+
+  setup: true
+
+  workflows:
+    setup_config:
+      jobs:
+        - node-ecs/setup_config
