@@ -11,4 +11,6 @@ steps:
       at: /tmp/workspace
   - run:
       name: Assess Plan Change
+      environment:
+        ENV: <<parameters.env>>
       command: <<include(scripts/cancel-workflow.sh)>>
