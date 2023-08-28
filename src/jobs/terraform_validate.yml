@@ -7,6 +7,10 @@ parameters:
   account_id:
     type: string
     description: "AWS Account ID"
+  bucket_name:
+    type: string
+    description: "Name of S3 Bucket with terraform state"
+    default: ""
   dir:
     type: string
     default: "tf"
@@ -19,5 +23,6 @@ parameters:
 steps:
   - terraform_validate:
       account_id: << parameters.account_id >>
+      bucket_name: <<parameters.bucket_name>>
       dir: << parameters.dir >>
       run_checkov: << parameters.run_checkov >>

@@ -18,6 +18,11 @@ then
       exit 1
 fi
 
+if [ -z "$BUCKET_NAME" ]
+then
+      BUCKET_NAME="figure-application-$ENV"
+fi
+
 eval "$SCRIPT_ASSUME"
 
 eval "$SCRIPT_SET_VARS"
@@ -29,5 +34,5 @@ cd "$DIR" || exit
 
 terraform get
 terraform init -reconfigure \
-    -backend-config="bucket=figure-application-$ENV" \
+    -backend-config="bucket=$BUCKET_NAME" \
     -backend-config="profile=assumed-role"
