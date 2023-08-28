@@ -5,6 +5,10 @@ parameters:
   account_id:
     type: string
     description: "AWS Account ID"
+  bucket_name:
+    type: string
+    description: "Name of S3 Bucket with terraform state"
+    default: ""
   dir:
     type: string
     default: "tf"
@@ -19,6 +23,7 @@ steps:
       name: Terraform Init
       environment:
         ACCOUNT_ID: <<parameters.account_id>>
+        BUCKET_NAME: <<parameters.bucket_name>>
         DIR: <<parameters.dir>>
         ENV: "development"
         ROLE_NAME: "TerraformDeployer"
