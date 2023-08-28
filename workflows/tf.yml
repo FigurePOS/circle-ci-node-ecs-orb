@@ -32,6 +32,8 @@ workflows:
           context:
             - node
       - terraform_assess_plan_changed_prod:
+          context:
+            - node
           requires:
             - terraform_validate
             - terraform_plan_prod
