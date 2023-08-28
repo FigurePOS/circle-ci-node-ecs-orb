@@ -33,7 +33,7 @@ workflows:
             - node
       - terraform_assess_plan_changed_prod:
           context:
-            - node
+            - circleci
           requires:
             - terraform_validate
             - terraform_plan_prod
