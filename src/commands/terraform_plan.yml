@@ -42,8 +42,5 @@ steps:
   - persist_to_workspace:
       root: /tmp
       paths: [<<parameters.env>>-tfplan.binary, <<parameters.env>>-tfplan.change]
-  - store_artifacts:
-      path: /tmp/<<parameters.env>>-tfplan.json
-      destination: <<parameters.env>>-tfplan.json
 
 

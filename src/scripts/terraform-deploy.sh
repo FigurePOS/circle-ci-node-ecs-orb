@@ -14,9 +14,9 @@ fi
 
 cd "$DIR" || exit
 
-if [ -f /tmp/workspace/"$ENV"-tfplan.binary ] && [[ $(cat /tmp/workspace/"$ENV"-tfplan.change) == "true" ]];
+if [ -f /tmp/"$ENV"-tfplan.binary ] && [[ $(cat /tmp/"$ENV"-tfplan.change) == "true" ]];
 then
-    terraform apply --auto-approve /tmp/workspace/"$ENV"-tfplan.binary;
+    terraform apply --auto-approve /tmp/"$ENV"-tfplan.binary;
 else
     echo "No plan found."
 fi

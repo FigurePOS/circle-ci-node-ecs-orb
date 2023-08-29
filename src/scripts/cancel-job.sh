@@ -18,15 +18,15 @@ then
       exit 1
 fi
 
-if [ -z "$ENV" ]
+if [ -z "$CHANGE_FILE" ]
 then
-      echo "ENV variable is empty"
+      echo "CHANGE_FILE variable is empty"
       exit 1
 fi
 
 
 
-if [[ $(cat /tmp/workspace/"$ENV"-tfplan.change) != "true" ]];
+if [[ $(cat "$CHANGE_FILE") != "true" ]];
 then
     echo "No changes in the plan. Canceling.."
     curl --request POST \

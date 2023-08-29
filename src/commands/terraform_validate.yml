@@ -54,7 +54,7 @@ steps:
         - run:
             name: Assess Plan Change
             environment:
-              ENV: "development"
+              CHANGE_FILE: /tmp/workspace/development-tfplan.change
             command: <<include(scripts/cancel-job.sh)>>
         - run:
             name: Checkov Plan Check
