@@ -39,8 +39,5 @@ steps:
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>
-  - persist_to_workspace:
-      root: /tmp
-      paths: [<<parameters.env>>-tfplan.binary, <<parameters.env>>-tfplan.change]
 
 

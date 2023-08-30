@@ -20,9 +20,9 @@ fi
 
 cd "$DIR" || exit
 
-if [ -f /tmp/workspace/"$ENV"-tfplan.binary ] && [[ $(cat /tmp/workspace/"$ENV"-tfplan.change) == "true" ]];
+if [ -f /tmp/"$ENV"-tfplan.binary ];
 then
-    terraform show -json /tmp/workspace/"$ENV"-tfplan.binary > tfplan.json
+    terraform show -json /tmp/"$ENV"-tfplan.binary > tfplan.json
     echo "$CHECKOV_CONFIG" > .checkov.yml
     checkov -f tfplan.json --config-file .checkov.yml
 else

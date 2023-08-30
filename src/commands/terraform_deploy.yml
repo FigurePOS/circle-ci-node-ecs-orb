@@ -40,11 +40,6 @@ steps:
         TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>
   - run:
-      name: Assess Plan Changed
-      environment:
-        CHANGE_FILE: /tmp/development-tfplan.change
-      command: <<include(scripts/cancel-job.sh)>>
-  - run:
       name: Terraform Deploy
       environment:
         AWS_ACCESS_KEY_ID: ""

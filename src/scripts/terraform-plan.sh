@@ -18,9 +18,7 @@ if terraform plan -detailed-exitcode --out /tmp/"$ENV"-tfplan.binary;
 then
     rm -rf /tmp/"$ENV"-tfplan.binary
     echo "No changes detected."
-    echo "false" > /tmp/"$ENV"-tfplan.change
 else
-    echo "true" > /tmp/"$ENV"-tfplan.change
     terraform show -json /tmp/"$ENV"-tfplan.binary > /tmp/"$ENV"-tfplan.json
 fi
 
