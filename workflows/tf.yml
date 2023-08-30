@@ -12,14 +12,14 @@ parameters:
 workflows:
   terraform_validation_deploy:
     jobs:
-      - terraform_plan_dev:
-          context:
-            - node
       - terraform_validate:
           context:
             - node
+      - terraform_plan_dev:
+          context:
+            - node
           requires:
-            - terraform_plan_dev
+            - terraform_validate
       - terraform_deploy_dev:
           context:
             - node
@@ -31,6 +31,8 @@ workflows:
       - terraform_plan_prod:
           context:
             - node
+          requires:
+            - terraform_validate
       - approve_terraform_deploy_prod:
           type: approval
           requires:
