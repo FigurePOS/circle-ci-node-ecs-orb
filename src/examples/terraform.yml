@@ -7,7 +7,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    node-ecs: figure/node-ecs@1.4.0
+    node-ecs: figure/node-ecs@1.9.0
 
   workflows:
     terraform_validation_deploy:
@@ -31,17 +31,10 @@ usage:
         - terraform_plan_prod:
             context:
               - node
-        - terraform_assess_plan_changed_prod:
-            requires:
-              - terraform_validate
-              - terraform_plan_prod
-            filters:
-              branches:
-                only: master
         - approve_terraform_deploy_prod:
             type: approval
             requires:
-              - terraform_assess_plan_changed_prod
+              - terraform_plan_prod
             filters:
               branches:
                 only: master
@@ -71,6 +64,7 @@ usage:
         - checkout
         - node-ecs/terraform_validate:
             account_id: "880892332156"
+            env: development
 
     terraform_deploy_dev:
       description: "Terraform Deployment to Development"
@@ -80,15 +74,6 @@ usage:
         - node-ecs/terraform_deploy:
             account_id: "880892332156"
             env: development
-
-    terraform_assess_plan_changed_prod:
-      description: "Assess If the Plan for Production Changed"
-      executor: node-ecs/node20
-      steps:
-        - checkout
-        - node-ecs/terraform_assess_plan_changed:
-            account_id: "682919404744"
-            env: production
 
     terraform_plan_prod:
       description: "Terraform Plan for Production"

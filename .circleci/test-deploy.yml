@@ -36,6 +36,7 @@ jobs:
       - node-ecs/terraform_validate:
           account_id: "880892332156"
           dir: test
+          env: development
 
   test-terraform_validate_without_checkov:
     executor: node-ecs/node20
@@ -44,6 +45,7 @@ jobs:
       - node-ecs/terraform_validate:
           account_id: "880892332156"
           dir: test
+          env: development
           run_checkov: false
 
   test-terraform_deploy:

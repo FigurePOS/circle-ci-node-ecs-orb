@@ -29,13 +29,16 @@ steps:
         SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
       command: <<include(scripts/terraform-init.sh)>>
-  - attach_workspace:
-      at: /tmp/workspace
   - run:
-      name: Assess Plan Change
+      name: Terraform Plan
       environment:
-        ENV: "development"
-      command: <<include(scripts/cancel-job.sh)>>
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SECRET_ACCESS_KEY: ""
+        DIR: <<parameters.dir>>
+        ENV: <<parameters.env>>
+        TF_VAR_aws_profile: "assumed-role"
+        TF_VAR_env: <<parameters.env>>
+      command: <<include(scripts/terraform-plan.sh)>>
   - run:
       name: Terraform Deploy
       environment:
@@ -46,3 +49,6 @@ steps:
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.dir>>
       command: <<include(scripts/terraform-deploy.sh)>>
+  - store_artifacts:
+      path: /tmp/<<parameters.env>>-tfplan.json
+      destination: <<parameters.env>>-tfplan.json

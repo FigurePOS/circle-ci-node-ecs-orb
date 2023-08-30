@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.1.0
-  node-ecs: figure/node-ecs@1.6.5
+  node-ecs: figure/node-ecs@1.9.0
 
 parameters:
   service_name:
@@ -31,19 +31,10 @@ workflows:
       - terraform_plan_prod:
           context:
             - node
-      - terraform_assess_plan_changed_prod:
-          context:
-            - circleci
-          requires:
-            - terraform_validate
-            - terraform_plan_prod
-          filters:
-            branches:
-              only: master
       - approve_terraform_deploy_prod:
           type: approval
           requires:
-            - terraform_assess_plan_changed_prod
+            - terraform_plan_prod
           filters:
             branches:
               only: master
@@ -76,6 +67,7 @@ jobs:
       - checkout
       - node-ecs/terraform_validate:
           account_id: "880892332156"
+          env: development
       - node-ecs/slack_notify_fail_master:
           service_name: << pipeline.parameters.service_name >>
 
@@ -87,16 +79,6 @@ jobs:
       - node-ecs/terraform_deploy:
           account_id: "880892332156"
           env: development
-      - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
-
-  terraform_assess_plan_changed_prod:
-    description: "Assess if the Plan for Production Changed"
-    executor: node-ecs/node20
-    steps:
-      - checkout
-      - node-ecs/terraform_assess_plan_changed:
-          env: production
       - node-ecs/slack_notify_fail_master:
           service_name: << pipeline.parameters.service_name >>
 

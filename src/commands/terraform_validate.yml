@@ -13,6 +13,9 @@ parameters:
     type: string
     default: "tf"
     description: "Directory of terraform scripts"
+  env:
+    type: string
+    description: "Environment"
   run_checkov:
     type: boolean
     default: true
@@ -41,6 +44,27 @@ steps:
       condition: <<parameters.run_checkov>>
       steps:
         - run:
+            name: Terraform Init
+            environment:
+              ACCOUNT_ID: <<parameters.account_id>>
+              BUCKET_NAME: <<parameters.bucket_name>>
+              DIR: <<parameters.dir>>
+              ENV: <<parameters.env>>
+              ROLE_NAME: "TerraformDeployer"
+              SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
+              SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
+            command: <<include(scripts/terraform-init.sh)>>
+        - run:
+            name: Terraform Plan
+            environment:
+              AWS_ACCESS_KEY_ID: ""
+              AWS_SECRET_ACCESS_KEY: ""
+              DIR: <<parameters.dir>>
+              ENV: <<parameters.env>>
+              TF_VAR_aws_profile: "assumed-role"
+              TF_VAR_env: <<parameters.env>>
+            command: <<include(scripts/terraform-plan.sh)>>
+        - run:
             name: Checkov Static Check
             environment:
               DIR: <<parameters.dir>>
@@ -49,13 +73,6 @@ steps:
               cd $DIR
               echo "$CHECKOV_CONFIG" > .checkov.yml
               checkov -d . --config-file .checkov.yml
-        - attach_workspace:
-            at: /tmp/workspace
-        - run:
-            name: Assess Plan Change
-            environment:
-              ENV: "development"
-            command: <<include(scripts/cancel-job.sh)>>
         - run:
             name: Checkov Plan Check
             environment:
