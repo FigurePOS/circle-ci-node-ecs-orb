@@ -14,7 +14,7 @@ fi
 
 cd "$DIR" || exit
 
-if [ -f /tmp/"$ENV"-tfplan.binary ] && [[ $(cat /tmp/"$ENV"-tfplan.change) == "true" ]];
+if [ -f /tmp/"$ENV"-tfplan.binary ];
 then
     terraform apply --auto-approve /tmp/"$ENV"-tfplan.binary;
 else
