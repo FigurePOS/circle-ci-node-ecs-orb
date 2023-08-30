@@ -67,7 +67,7 @@ jobs:
       - checkout
       - node-ecs/terraform_validate:
           account_id: "880892332156"
-          env: development
+          #env: development
       - node-ecs/slack_notify_fail_master:
           service_name: << pipeline.parameters.service_name >>
 
