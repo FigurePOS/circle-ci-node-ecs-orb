@@ -20,7 +20,7 @@ if [ "$tf" == true ]; then
     git clone --depth 1 --no-checkout git@github.com:FigurePOS/circle-ci-node-ecs-orb.git
     cd circle-ci-node-ecs-orb || exit
     git sparse-checkout set workflows
-    git checkout v1.11.1
+    git checkout master
     cd ..
     yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' /tmp/generated-config.yml circle-ci-node-ecs-orb/workflows/tf.yml
 fi
