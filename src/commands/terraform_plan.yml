@@ -36,6 +36,7 @@ steps:
         AWS_SECRET_ACCESS_KEY: ""
         DIR: <<parameters.dir>>
         ENV: <<parameters.env>>
+        TF_VAR_aws_account_id: <<parameters.account_id>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.env>>
       command: <<include(scripts/terraform-plan.sh)>>

@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.1.0
-  node-ecs: figure/node-ecs@1.11.1
+  node-ecs: figure/node-ecs@1.11.2
 
 parameters:
   service_name:

@@ -7,7 +7,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    node-ecs: figure/node-ecs@1.11.1
+    node-ecs: figure/node-ecs@1.11.2
 
   workflows:
     terraform_validation_deploy:
