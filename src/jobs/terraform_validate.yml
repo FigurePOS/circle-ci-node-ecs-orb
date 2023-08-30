@@ -18,10 +18,6 @@ parameters:
   env:
     type: string
     description: "Environment"
-  run_checkov:
-    type: boolean
-    default: true
-    description: "Whether to run checkov security checks or not"
 
 steps:
   - terraform_validate:
@@ -29,4 +25,3 @@ steps:
       bucket_name: <<parameters.bucket_name>>
       dir: << parameters.dir >>
       env: << parameters.env >>
-      run_checkov: << parameters.run_checkov >>
