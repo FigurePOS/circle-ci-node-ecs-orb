@@ -16,8 +16,15 @@ parameters:
   env:
     type: string
     description: "Environment"
+  ssh_key_fingerprint:
+    type: string
+    default: ""
+    description: "SSH Key Fingerprint"
 
 steps:
+  - add_ssh_keys:
+      fingerprints:
+        - <<parameters.ssh_key_fingerprint>>
   - run:
       name: Terraform Init
       environment:

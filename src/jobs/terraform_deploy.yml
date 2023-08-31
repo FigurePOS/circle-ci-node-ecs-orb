@@ -18,6 +18,10 @@ parameters:
   env:
     type: string
     description: "Environment"
+  ssh_key_fingerprint:
+    type: string
+    default: ""
+    description: "SSH Key Fingerprint"
 
 steps:
   - terraform_deploy:
@@ -25,3 +29,4 @@ steps:
       account_id: <<parameters.account_id>>
       dir: <<parameters.dir>>
       env: <<parameters.env>>
+      ssh_key_fingerprint: <<parameters.ssh_key_fingerprint>>

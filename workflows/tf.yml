@@ -8,6 +8,10 @@ parameters:
   service_name:
     type: string
     default: "service"
+  ssh_key_fingerprint:
+    type: string
+    default: ""
+    description: "SSH Key Fingerprint"
 
 workflows:
   terraform_validation_deploy:
@@ -59,8 +63,9 @@ jobs:
       - node-ecs/terraform_plan:
           account_id: "880892332156"
           env: development
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
+          service_name: <<pipeline.parameters.service_name>>
 
   terraform_validate:
     description: "Terraform Validation"
@@ -70,8 +75,9 @@ jobs:
       - node-ecs/terraform_validate:
           account_id: "880892332156"
           env: development
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
+          service_name: <<pipeline.parameters.service_name>>
 
   terraform_deploy_dev:
     description: "Terraform Deployment to Development"
@@ -81,8 +87,9 @@ jobs:
       - node-ecs/terraform_deploy:
           account_id: "880892332156"
           env: development
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
+          service_name: <<pipeline.parameters.service_name>>
 
   terraform_plan_prod:
     description: "Terraform Plan for Production"
@@ -92,8 +99,9 @@ jobs:
       - node-ecs/terraform_plan:
           account_id: "682919404744"
           env: production
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
+          service_name: <<pipeline.parameters.service_name>>
 
   terraform_deploy_prod:
     description: "Terraform Deployment to Production"
@@ -103,5 +111,6 @@ jobs:
       - node-ecs/terraform_deploy:
           account_id: "682919404744"
           env: production
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
-          service_name: << pipeline.parameters.service_name >>
+          service_name: <<pipeline.parameters.service_name>>
