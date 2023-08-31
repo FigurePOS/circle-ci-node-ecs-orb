@@ -24,7 +24,7 @@ workflows:
           context:
             - node
           requires:
-            - terraform_validate
+            - terraform_plan_dev
           filters:
             branches:
               only: master
