@@ -5,6 +5,12 @@ executor: path-filtering/default
 
 resource_class: small
 
+parameters:
+  tf_workflow_git_ref:
+    type: string
+    default: master
+    description: "Git ref of terraform workflow to use"
+
 steps:
   - checkout
   - path-filtering/set-parameters:
@@ -15,6 +21,7 @@ steps:
       output-path: /tmp/pipeline-parameters.json
   - generate_config:
       pipeline_parameters_json_file: /tmp/pipeline-parameters.json
+      tf_workflow_git_ref: <<parameters.tf_workflow_git_ref>>
   - run:
       name: "Print generated config"
       command: cat /tmp/generated-config.yml
