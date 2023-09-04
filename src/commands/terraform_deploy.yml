@@ -9,6 +9,10 @@ parameters:
     type: string
     description: "Name of S3 Bucket with terraform state"
     default: ""
+  db_tunnel_mapping:
+    type: string
+    default: ""
+    description: "Mapping of ports to hostnames stored in SSM in format: port:ssm_param,port:ssm_param"
   dir:
     type: string
     default: "tf"
@@ -37,23 +41,14 @@ steps:
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
       command: <<include(scripts/terraform-init.sh)>>
   - run:
-      name: Terraform Plan
-      environment:
-        AWS_ACCESS_KEY_ID: ""
-        AWS_SECRET_ACCESS_KEY: ""
-        DIR: <<parameters.dir>>
-        ENV: <<parameters.env>>
-        TF_VAR_aws_account_id: <<parameters.account_id>>
-        TF_VAR_aws_profile: "assumed-role"
-        TF_VAR_env: <<parameters.env>>
-      command: <<include(scripts/terraform-plan.sh)>>
-  - run:
       name: Terraform Deploy
       environment:
         AWS_ACCESS_KEY_ID: ""
         AWS_SECRET_ACCESS_KEY: ""
+        DB_TUNNEL_MAPPING: <<parameters.db_tunnel_mapping>>
         DIR: <<parameters.dir>>
         ENV: <<parameters.env>>
+        SCRIPT_SSH_TUNNEL: <<include(scripts/ssh-tunnel.sh)>>
         TF_VAR_aws_account_id: <<parameters.account_id>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_env: <<parameters.env>>
