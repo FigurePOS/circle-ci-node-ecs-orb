@@ -5,10 +5,15 @@ parameters:
   pipeline_parameters_json_file:
     type: string
     default: /tmp/pipeline-parameters.json
+  tf_workflow_git_ref:
+    type: string
+    default: master
+    description: "Git ref of terraform workflow to use"
 
 steps:
   - run:
       name: Generate configuration
       environment:
-        CONFIG_JSON_FILE: << parameters.pipeline_parameters_json_file >>
-      command: << include(scripts/generate-config.sh) >>
+        CONFIG_JSON_FILE: <<parameters.pipeline_parameters_json_file>>
+        TF_WORKFLOW_GIT_REF: <<parameters.tf_workflow_git_ref>>
+      command: <<include(scripts/generate-config.sh)>>
