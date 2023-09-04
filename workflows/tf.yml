@@ -5,10 +5,6 @@ orbs:
   node-ecs: figure/node-ecs@1.11.2
 
 parameters:
-  db_tunnel_mapping:
-    type: string
-    default: ""
-    description: "Mapping of ports to hostnames stored in SSM in format: port:ssm_param,port:ssm_param"
   service_name:
     type: string
     default: "service"
@@ -66,7 +62,6 @@ jobs:
       - checkout
       - node-ecs/terraform_plan:
           account_id: "880892332156"
-          db_tunnel_mapping: <<pipeline.parameters.db_tunnel_mapping>>
           env: development
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
@@ -91,7 +86,6 @@ jobs:
       - checkout
       - node-ecs/terraform_deploy:
           account_id: "880892332156"
-          db_tunnel_mapping: <<pipeline.parameters.db_tunnel_mapping>>
           env: development
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
@@ -104,7 +98,6 @@ jobs:
       - checkout
       - node-ecs/terraform_plan:
           account_id: "682919404744"
-          db_tunnel_mapping: <<pipeline.parameters.db_tunnel_mapping>>
           env: production
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
@@ -117,7 +110,6 @@ jobs:
       - checkout
       - node-ecs/terraform_deploy:
           account_id: "682919404744"
-          db_tunnel_mapping: <<pipeline.parameters.db_tunnel_mapping>>
           env: production
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
       - node-ecs/slack_notify_fail_master:
