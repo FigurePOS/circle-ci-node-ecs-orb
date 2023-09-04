@@ -22,7 +22,7 @@ fi
 tf=$(jq -r '.tf' "$CONFIG_JSON_FILE")
 if [ "$tf" == true ]; then
     echo "Terraform deployment triggered"
-    git clone --depth 1 --no-checkout git@github.com:FigurePOS/circle-ci-node-ecs-orb.git
+    git clone --depth 1 --no-checkout --branch "$TF_WORKFLOW_GIT_REF" --single-branch git@github.com:FigurePOS/circle-ci-node-ecs-orb.git
     cd circle-ci-node-ecs-orb || exit
     git sparse-checkout set workflows
     git checkout "$TF_WORKFLOW_GIT_REF"
