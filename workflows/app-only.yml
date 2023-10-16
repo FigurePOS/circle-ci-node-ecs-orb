@@ -1,0 +1,43 @@
+workflows:
+  cicd_app:
+    jobs:
+      - test_unit:
+          context:
+            - node
+      - test_e2e:
+          context:
+            - node
+      - build:
+          context:
+            - node
+          requires:
+            - test_unit
+            - test_e2e
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_development:
+          context:
+            - node
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - approve_deploy_production:
+          context:
+            - node
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_production:
+          context:
+            - node
+          requires:
+            - approve_deploy_production
