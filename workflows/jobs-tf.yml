@@ -1,9 +1,3 @@
-version: 2.1
-
-orbs:
-  node: circleci/node@5.1.0
-  node-ecs: figure/node-ecs@1.11.2
-
 parameters:
   db_tunnel_mapping:
     type: string
@@ -16,47 +10,6 @@ parameters:
     type: string
     default: ""
     description: "SSH Key Fingerprint"
-
-workflows:
-  terraform_validation_deploy:
-    jobs:
-      - terraform_validate:
-          context:
-            - node
-      - terraform_plan_dev:
-          context:
-            - node
-          requires:
-            - terraform_validate
-      - terraform_deploy_dev:
-          context:
-            - node
-          requires:
-            - terraform_plan_dev
-          filters:
-            branches:
-              only: master
-      - terraform_plan_prod:
-          context:
-            - node
-          requires:
-            - terraform_validate
-      - approve_terraform_deploy_prod:
-          type: approval
-          requires:
-            - terraform_plan_prod
-          filters:
-            branches:
-              only: master
-      - terraform_deploy_prod:
-          context:
-            - node
-          requires:
-            - approve_terraform_deploy_prod
-          filters:
-            branches:
-              only: master
-
 
 jobs:
   terraform_plan_dev:
