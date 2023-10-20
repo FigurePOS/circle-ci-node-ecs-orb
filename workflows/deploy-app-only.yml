@@ -1,27 +1,45 @@
 workflows:
   cicd_app:
     jobs:
-      - test_unit:
-          context:
-            - node
-      - test_e2e:
-          context:
-            - node
       - build:
           context:
             - node
-          requires:
-            - test_unit
-            - test_e2e
-          filters:
-            branches:
-              only:
-                - master
-      - deploy_development:
+      - test_acceptance:
           context:
             - node
           requires:
             - build
+      - test_e2e:
+          context:
+            - node
+          requires:
+            - build
+      - test_ui:
+          context:
+            - node
+          requires:
+            - build
+      - test_unit:
+          context:
+            - node
+      - push:
+          context:
+            - node
+          requires:
+            - test_acceptance
+            - test_e2e
+            - test_ui
+            - test_unit
+          filters:
+            branches:
+              only:
+                - master
+
+      - deploy_development:
+          context:
+            - node
+          requires:
+            - push
           filters:
             branches:
               only:
@@ -31,7 +49,7 @@ workflows:
             - node
           type: approval
           requires:
-            - build
+            - push
           filters:
             branches:
               only:

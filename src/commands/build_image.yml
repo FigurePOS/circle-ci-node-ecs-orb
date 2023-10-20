@@ -1,0 +1,35 @@
+description: >
+  Build docker image and store it in workspace.
+
+parameters:
+  repository_name:
+    type: string
+    description: "Docker repository name"
+  repository_url:
+    type: string
+    description: "Docker repository URL"
+    default: "637192944017.dkr.ecr.us-east-1.amazonaws.com"
+
+steps:
+  - setup_remote_docker:
+      docker_layer_caching: true
+  - run:
+      name: "Docker image build"
+      environment:
+        REPOSITORY_NAME: <<parameters.repository_name>>
+        REPOSITORY_URL: <<parameters.repository_url>>
+      command: |
+        docker build -t "$REPOSITORY_URL/$REPOSITORY_NAME:${CIRCLE_SHA1:0:7}" .
+  - run:
+      name: Save docker image
+      environment:
+        REPOSITORY_NAME: <<parameters.repository_name>>
+        REPOSITORY_URL: <<parameters.repository_url>>
+      command: |
+        mkdir -p images
+        docker image save -o "images/${CIRCLE_SHA1}" "$REPOSITORY_URL/$REPOSITORY_NAME:${CIRCLE_SHA1:0:7}"
+  - persist_to_workspace:
+      root: .
+      paths:
+        - images
+

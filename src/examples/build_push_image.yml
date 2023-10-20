@@ -1,0 +1,41 @@
+description: >
+  Build and push docker image
+
+usage:
+  version: 2.1
+  orbs:
+    node-ecs: figure/node-ecs@2.1.0
+
+  jobs:
+    build:
+      executor: node-ecs/node20
+      steps:
+        - checkout
+        - run:
+            name: "Yarn build and install"
+            command: |
+              yarn build
+              yarn install --prod --pure-lockfile
+        - node-ecs/build_image:
+            repository_name: figure/auth
+        - node-ecs/slack_notify_fail_master:
+            service_name: << pipeline.parameters.service_name >>
+
+    test_e2e:
+      executor: node-ecs/node20
+      steps:
+        - checkout
+        - node-ecs/load_image
+        - run:
+            name: "Run Tests"
+            command: |
+              cd tests
+              ./run.sh ${CIRCLE_SHA1:0:7}
+
+    push:
+      executor: node-ecs/node20
+      steps:
+        - checkout
+        - node-ecs/load_image
+        - node-ecs/push_image:
+            repository_name: figure/auth
