@@ -1,18 +1,35 @@
 workflows:
-  cicd_app_tf:
+  cicd_app:
     jobs:
-      - test_unit:
-          context:
-            - node
-      - test_e2e:
-          context:
-            - node
       - build:
           context:
             - node
+      - test_acceptance:
+          context:
+            - node
           requires:
-            - test_unit
+            - build
+      - test_e2e:
+          context:
+            - node
+          requires:
+            - build
+      - test_ui:
+          context:
+            - node
+          requires:
+            - build
+      - test_unit:
+          context:
+            - node
+      - push:
+          context:
+            - node
+          requires:
+            - test_acceptance
             - test_e2e
+            - test_ui
+            - test_unit
           filters:
             branches:
               only:
@@ -39,7 +56,7 @@ workflows:
           context:
             - node
           requires:
-            - build
+            - push
             - terraform_deploy_dev
           filters:
             branches:

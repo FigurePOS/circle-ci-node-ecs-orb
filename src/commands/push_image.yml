@@ -1,0 +1,32 @@
+description: >
+  Push docker image to Docker registry.
+
+parameters:
+  aws_region:
+    type: string
+    description: "AWS Region"
+    default: "us-east-1"
+  repository_name:
+    type: string
+    description: "Docker repository name"
+  repository_url:
+    type: string
+    description: "Docker repository URL"
+    default: "637192944017.dkr.ecr.us-east-1.amazonaws.com"
+
+steps:
+  - setup_remote_docker:
+      docker_layer_caching: true
+  - run:
+      name: Push image
+      environment:
+        AWS_REGION: <<parameters.aws_region>>
+        REPOSITORY_NAME: <<parameters.repository_name>>
+        REPOSITORY_URL: <<parameters.repository_url>>
+      command: |
+        aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REPOSITORY_URL"
+        docker push "$REPOSITORY_URL/$REPOSITORY_NAME:${CIRCLE_SHA1:0:7}"
+
+        MANIFEST=$(aws ecr batch-get-image --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --image-ids imageTag="${CIRCLE_SHA1:0:7}" --query 'images[].imageManifest' --output text)
+
+        aws ecr put-image --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --image-tag "latest" --image-manifest "$MANIFEST"

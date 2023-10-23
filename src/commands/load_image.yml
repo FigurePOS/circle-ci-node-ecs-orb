@@ -1,0 +1,12 @@
+description: >
+  Load docker image from workspace.
+
+steps:
+  - attach_workspace:
+      at: .
+  - setup_remote_docker:
+      docker_layer_caching: true
+  - run:
+      name: Load image
+      command: |
+        docker image load < "images/${CIRCLE_SHA1}"
