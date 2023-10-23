@@ -15,8 +15,6 @@ parameters:
     default: "637192944017.dkr.ecr.us-east-1.amazonaws.com"
 
 steps:
-  - setup_remote_docker:
-      docker_layer_caching: true
   - run:
       name: Push image
       environment:
