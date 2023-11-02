@@ -1,0 +1,16 @@
+description: >
+  Run `yarn build` with caching node_modules.
+
+steps:
+  - restore_cache:
+      key: build-yarn-deps-{{ checksum "yarn.lock" }}
+  - node/install-packages:
+      pkg-manager: yarn
+      with-cache: false
+  - save_cache:
+      key: build-yarn-deps-{{ checksum "yarn.lock" }}
+      paths:
+        - node_modules
+  - run:
+      name: "Yarn build"
+      command: yarn build
