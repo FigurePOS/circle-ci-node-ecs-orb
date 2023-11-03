@@ -12,9 +12,15 @@ parameters:
 
 steps:
   - yarn_build
+  - restore_cache:
+      key: build-prod-yarn-deps-{{ checksum "yarn.lock" }}
   - run:
       name: "Yarn install production dependencies"
       command: yarn install --prod --pure-lockfile
+  - save_cache:
+      key: build-prod-yarn-deps-{{ checksum "yarn.lock" }}
+      paths:
+        - node_modules
   - build_image:
       repository_name: <<parameters.repository_name>>
       repository_url: <<parameters.repository_url>>
