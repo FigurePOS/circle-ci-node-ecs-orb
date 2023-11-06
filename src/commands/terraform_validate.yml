@@ -49,6 +49,9 @@ steps:
       name: Terraform Validate
       environment:
         DIR: <<parameters.dir>>
+        TF_VAR_aws_region: <<parameters.aws_region>>
+        TF_VAR_env: <<parameters.env>>
+        TF_VAR_service_name: <<parameters.service_name>>
       command: |
         cd $DIR
         terraform validate

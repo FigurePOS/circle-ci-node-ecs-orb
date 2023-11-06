@@ -60,7 +60,9 @@ steps:
         SCRIPT_SSH_TUNNEL: <<include(scripts/ssh-tunnel.sh)>>
         TF_VAR_aws_account_id: <<parameters.account_id>>
         TF_VAR_aws_profile: "assumed-role"
+        TF_VAR_aws_region: <<parameters.aws_region>>
         TF_VAR_env: <<parameters.env>>
+        TF_VAR_service_name: <<parameters.service_name>>
       command: <<include(scripts/terraform-plan.sh)>>
 
 
