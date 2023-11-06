@@ -67,6 +67,7 @@ usage:
         - node-ecs/terraform_validate:
             account_id: "880892332156"
             env: development
+            service_name: fgr-service
 
     terraform_deploy_dev:
       description: "Terraform Deployment to Development"
@@ -76,6 +77,7 @@ usage:
         - node-ecs/terraform_deploy:
             account_id: "880892332156"
             env: development
+            service_name: fgr-service
 
     terraform_plan_prod:
       description: "Terraform Plan for Production"
@@ -85,6 +87,7 @@ usage:
         - node-ecs/terraform_plan:
             account_id: "682919404744"
             env: production
+            service_name: fgr-service
 
     terraform_deploy_prod:
       description: "Terraform Deployment to Production"
@@ -94,3 +97,4 @@ usage:
         - node-ecs/terraform_deploy:
             account_id: "682919404744"
             env: production
+            service_name: fgr-service
