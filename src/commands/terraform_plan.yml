@@ -5,6 +5,10 @@ parameters:
   account_id:
     type: string
     description: "AWS Account ID"
+  aws_region:
+    type: string
+    description: "AWS Region"
+    default: "us-east-1"
   bucket_name:
     type: string
     description: "Name of S3 Bucket with terraform state"
@@ -24,6 +28,9 @@ parameters:
     type: string
     default: ""
     description: "SSH Key Fingerprint"
+  service_name:
+    type: string
+    description: "Name of the service"
 
 steps:
   - add_ssh_keys:
@@ -33,12 +40,14 @@ steps:
       name: Terraform Init
       environment:
         ACCOUNT_ID: <<parameters.account_id>>
+        AWS_REGION: <<parameters.aws_region>>
         BUCKET_NAME: <<parameters.bucket_name>>
         DIR: <<parameters.dir>>
         ENV: <<parameters.env>>
         ROLE_NAME: "TerraformDeployer"
         SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
+        SERVICE_NAME: <<parameters.service_name>>
       command: <<include(scripts/terraform-init.sh)>>
   - run:
       name: Terraform Plan

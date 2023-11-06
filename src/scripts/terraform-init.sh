@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+if [ -z "$AWS_REGION" ]
+then
+      echo "AWS_REGION is empty"
+      exit 1
+fi
+
+if [ -z "$BUCKET_NAME" ]
+then
+      BUCKET_NAME="figure-application-$ENV"
+fi
+
 if [ -z "$DIR" ]
 then
       echo "DIR is empty"
@@ -19,9 +30,10 @@ then
       exit 1
 fi
 
-if [ -z "$BUCKET_NAME" ]
+if [ -z "$SERVICE_NAME" ]
 then
-      BUCKET_NAME="figure-application-$ENV"
+     echo "SERVICE_NAME is empty"
+      exit 1
 fi
 
 eval "$SCRIPT_ASSUME"
@@ -36,4 +48,6 @@ cd "$DIR" || exit
 terraform get
 terraform init -reconfigure \
     -backend-config="bucket=$BUCKET_NAME" \
+    -backend-config="key=$SERVICE_NAME/terraform.tfstate" \
+    -backend-config="region=$AWS_REGION" \
     -backend-config="profile=assumed-role"
