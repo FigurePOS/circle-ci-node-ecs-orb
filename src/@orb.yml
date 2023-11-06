@@ -8,5 +8,6 @@ display:
 
 orbs:
   continuation: circleci/continuation@1.0.0
+  node: circleci/node@5.1.0
   path-filtering: circleci/path-filtering@1.0.0
   slack: circleci/slack@4.12.5

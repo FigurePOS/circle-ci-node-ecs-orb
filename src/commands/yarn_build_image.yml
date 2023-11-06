@@ -1,0 +1,26 @@
+description: >
+  Run `yarn build`, build docker image and store it in workspace.
+
+parameters:
+  repository_name:
+    type: string
+    description: "Docker repository name"
+  repository_url:
+    type: string
+    description: "Docker repository URL"
+    default: "637192944017.dkr.ecr.us-east-1.amazonaws.com"
+
+steps:
+  - yarn_build
+  - restore_cache:
+      key: build-prod-yarn-deps-{{ checksum "yarn.lock" }}
+  - run:
+      name: "Yarn install production dependencies"
+      command: yarn install --prod --pure-lockfile
+  - save_cache:
+      key: build-prod-yarn-deps-{{ checksum "yarn.lock" }}
+      paths:
+        - node_modules
+  - build_image:
+      repository_name: <<parameters.repository_name>>
+      repository_url: <<parameters.repository_url>>
