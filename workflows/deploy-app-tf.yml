@@ -71,6 +71,7 @@ workflows:
       - approve_deploy_prod:
           type: approval
           requires:
+            - push
             - terraform_plan_prod
           filters:
             branches:
