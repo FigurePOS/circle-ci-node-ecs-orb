@@ -22,6 +22,7 @@ release-filters: &release-filters
 jobs:
   test-terraform_plan:
     executor: node-ecs/node20
+    resource_class: small
     steps:
       - checkout
       - node-ecs/terraform_plan:
@@ -34,6 +35,7 @@ jobs:
 
   test-terraform_validate:
     executor: node-ecs/node20
+    resource_class: small
     steps:
       - checkout
       - node-ecs/terraform_validate:
@@ -44,6 +46,7 @@ jobs:
 
   test-terraform_deploy:
     executor: node-ecs/node20
+    resource_class: small
     steps:
       - checkout
       - node-ecs/terraform_deploy:
