@@ -14,7 +14,7 @@ parameters:
 jobs:
   terraform_plan_dev:
     description: "Terraform Plan for Development"
-    executor: node-ecs/node20
+    executor: node-ecs/small
     steps:
       - checkout
       - node-ecs/terraform_plan:
@@ -28,7 +28,7 @@ jobs:
 
   terraform_validate:
     description: "Terraform Validation"
-    executor: node-ecs/node20
+    executor: node-ecs/small
     steps:
       - checkout
       - node-ecs/terraform_validate:
@@ -41,7 +41,7 @@ jobs:
 
   terraform_deploy_dev:
     description: "Terraform Deployment to Development"
-    executor: node-ecs/node20
+    executor: node-ecs/small
     steps:
       - checkout
       - node-ecs/terraform_deploy:
@@ -55,7 +55,7 @@ jobs:
 
   terraform_plan_prod:
     description: "Terraform Plan for Production"
-    executor: node-ecs/node20
+    executor: node-ecs/small
     steps:
       - checkout
       - node-ecs/terraform_plan:
@@ -69,7 +69,7 @@ jobs:
 
   terraform_deploy_prod:
     description: "Terraform Deployment to Production"
-    executor: node-ecs/node20
+    executor: node-ecs/small
     steps:
       - checkout
       - node-ecs/terraform_deploy:

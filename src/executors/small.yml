@@ -1,0 +1,5 @@
+description: >
+  Executor for terraform jobs.
+docker:
+  - image: 'figurepos/aws-node-terraform:node20'
+resource_class: small
