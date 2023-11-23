@@ -1,0 +1,5 @@
+description: >
+  Executor for stadard jobs.
+docker:
+  - image: 'figurepos/aws-node-terraform:node20'
+resource_class: medium

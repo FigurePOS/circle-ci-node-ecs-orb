@@ -1,0 +1,5 @@
+description: >
+  Executor for more demanding jobs.
+docker:
+  - image: 'figurepos/aws-node-terraform:node20'
+resource_class: large
