@@ -1,7 +1,7 @@
 description: >
   notify slack about fail after merge to master
 
-executor: node20
+executor: small
 
 parameters:
   service_name:

@@ -1,7 +1,7 @@
 description: >
   notify buddy about deploy
 
-executor: node20
+executor: small
 
 parameters:
   service_name:
