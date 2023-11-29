@@ -1,0 +1,10 @@
+description: >
+  Load docker image from workspace on machine executor.
+
+steps:
+  - attach_workspace:
+      at: .
+  - run:
+      name: Load image
+      command: |
+        docker image load < "images/${CIRCLE_SHA1}"
