@@ -45,6 +45,12 @@ export AWS_SECRET_ACCESS_KEY=""
 
 cd "$DIR" || exit
 
+echo "Initializing terraform"
+echo " - key: $SERVICE_NAME/terraform.tfstate"
+echo " - bucket: $BUCKET_NAME"
+echo " - region: $AWS_REGION"
+echo " - profile: aassumed-role"
+
 terraform get
 terraform init -reconfigure \
     -backend-config="bucket=$BUCKET_NAME" \
