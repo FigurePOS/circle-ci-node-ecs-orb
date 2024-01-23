@@ -21,11 +21,11 @@ then
             SSH_CMD="$SSH_CMD -L $PORT:$URL:5432"
       done
 
-      BASTION_URL=$(aws ssm get-parameters --names "bastion_endpoint" --region=us-east-1 --query 'Parameters[].Value' --output text --profile assumed-role)
-      SSH_CMD="$SSH_CMD ec2-user@$BASTION_URL"
+      INSTANCE_ID=$(aws ec2 describe-instances --filter "Name=tag:Connection,Values=Bastion" --query "Reservations[].Instances[?State.Name == 'running'].InstanceId[] | [0]" --profile assumed-role --output text)
 
-      echo "Running $SSH_CMD"
-      $SSH_CMD &
+      echo "Running: $SSH_CMD -o ProxyCommand=\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession --parameters portNumber=22 --profile assumed-role\" ec2-user@bastion"
+
+      $SSH_CMD -o ProxyCommand="aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession --parameters portNumber=22 --profile assumed-role" ec2-user@bastion &
       sleep 1
 else
       echo "DB_TUNNEL_MAPPING is empty, no tunnel created."
