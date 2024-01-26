@@ -22,9 +22,16 @@ steps:
         REPOSITORY_NAME: <<parameters.repository_name>>
         REPOSITORY_URL: <<parameters.repository_url>>
       command: |
+        IMAGE_TAG="${CIRCLE_SHA1:0:7}"
         aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REPOSITORY_URL"
-        docker push "$REPOSITORY_URL/$REPOSITORY_NAME:${CIRCLE_SHA1:0:7}"
 
-        MANIFEST=$(aws ecr batch-get-image --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --image-ids imageTag="${CIRCLE_SHA1:0:7}" --query 'images[].imageManifest' --output text)
+        IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$REPOSITORY_URL/$REPOSITORY_NAME:$IMAGE_TAG")
+        IMAGE_EXISTS=$(aws ecr describe-images --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --filter "tagStatus=TAGGED" --query "imageDetails[?imageDigest=='${IMAGE_DIGEST#*@}']" --output text)
+        if [ -z "$IMAGE_EXISTS" ]; then
+          docker push "$REPOSITORY_URL/$REPOSITORY_NAME:$IMAGE_TAG"
+        else
+          echo "Image with the same digest already exists in the ECR. Skipping push."
+        fi
 
+        MANIFEST=$(aws ecr batch-get-image --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --image-ids imageTag="$IMAGE_TAG" --query 'images[].imageManifest' --output text)
         aws ecr put-image --region "$AWS_REGION" --repository-name "$REPOSITORY_NAME" --image-tag "latest" --image-manifest "$MANIFEST"
