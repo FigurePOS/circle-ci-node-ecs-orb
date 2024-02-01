@@ -2,7 +2,7 @@ description: >
   Deploy terraform plan.
 
 parameters:
-  account_id:
+  aws_account_id:
     type: string
     description: "AWS Account ID"
   aws_region:
@@ -17,6 +17,10 @@ parameters:
     type: string
     default: ""
     description: "Mapping of ports to hostnames stored in SSM in format: port:ssm_param,port:ssm_param"
+  deployment_tag:
+    type: string
+    description: "Tag of the deployment (abbreviated git commit hash)"
+    default: ""
   dir:
     type: string
     default: "tf"
@@ -24,6 +28,10 @@ parameters:
   env:
     type: string
     description: "Environment"
+  git_commit_hash:
+    type: string
+    description: "Git commit hash of the code"
+    default: ""
   ssh_key_fingerprint:
     type: string
     default: ""
@@ -39,7 +47,7 @@ steps:
   - run:
       name: Terraform Init
       environment:
-        ACCOUNT_ID: <<parameters.account_id>>
+        AWS_ACCOUNT_ID: <<parameters.aws_account_id>>
         AWS_REGION: <<parameters.aws_region>>
         BUCKET_NAME: <<parameters.bucket_name>>
         DIR: <<parameters.dir>>
@@ -58,12 +66,11 @@ steps:
         DIR: <<parameters.dir>>
         ENV: <<parameters.env>>
         SCRIPT_SSH_TUNNEL: <<include(scripts/ssh-tunnel.sh)>>
-        TF_VAR_aws_account_id: <<parameters.account_id>>
+        TF_VAR_aws_account_id: <<parameters.aws_account_id>>
+        TF_VAR_deployment_tag: <<parameters.deployment_tag>>
         TF_VAR_aws_profile: "assumed-role"
         TF_VAR_aws_region: <<parameters.aws_region>>
         TF_VAR_env: <<parameters.env>>
+        TF_VAR_git_commit_hash: <<parameters.git_commit_hash>>
         TF_VAR_service_name: <<parameters.service_name>>
       command: <<include(scripts/terraform-deploy.sh)>>
-  - store_artifacts:
-      path: /tmp/<<parameters.env>>-tfplan.json
-      destination: <<parameters.env>>-tfplan.json

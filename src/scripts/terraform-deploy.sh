@@ -18,6 +18,17 @@ then
       exit 1
 fi
 
+if [ -z "$TF_VAR_deployment_tag" ]
+then
+      TF_VAR_deployment_tag=${CIRCLE_SHA1:0:7}
+fi
+
+if [ -z "$TF_VAR_git_commit_hash" ]
+then
+      TF_VAR_git_commit_hash=$CIRCLE_SHA1
+fi
+
+
 eval "$SCRIPT_SSH_TUNNEL"
 
 cd "$DIR" || exit

@@ -12,6 +12,19 @@ parameters:
     description: "SSH Key Fingerprint"
 
 jobs:
+  terraform_validate:
+    description: "Terraform Validation"
+    executor: node-ecs/small
+    steps:
+      - checkout
+      - node-ecs/terraform_validate:
+          account_id: "880892332156"
+          env: development
+          service_name: <<pipeline.parameters.service_name>>
+          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
+      - node-ecs/slack_notify_fail_master:
+          service_name: <<pipeline.parameters.service_name>>
+  
   terraform_plan_dev:
     description: "Terraform Plan for Development"
     executor: node-ecs/small
@@ -20,19 +33,6 @@ jobs:
       - node-ecs/terraform_plan:
           account_id: "880892332156"
           db_tunnel_mapping: <<pipeline.parameters.db_tunnel_mapping>>
-          env: development
-          service_name: <<pipeline.parameters.service_name>>
-          ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
-      - node-ecs/slack_notify_fail_master:
-          service_name: <<pipeline.parameters.service_name>>
-
-  terraform_validate:
-    description: "Terraform Validation"
-    executor: node-ecs/small
-    steps:
-      - checkout
-      - node-ecs/terraform_validate:
-          account_id: "880892332156"
           env: development
           service_name: <<pipeline.parameters.service_name>>
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>

@@ -55,15 +55,8 @@ git checkout "$TF_WORKFLOW_GIT_REF"
 cd ..
 
 echo "version: 2.1" > /tmp/generated-config.yml
-tf=$(jq -r '.tf' "$CONFIG_JSON_FILE")
-if [ "$tf" == true ]; then
-    echo "Terraform deployment triggered"
-    # shellcheck disable=SC2016
-    yq eval-all --inplace '. as $item ireduce ({}; . * $item )' /tmp/generated-config.yml circle-ci-node-ecs-orb/workflows/deploy-app-tf.yml circle-ci-node-ecs-orb/workflows/jobs-tf.yml .circleci/app.yml
-else
-    # shellcheck disable=SC2016
-    yq eval-all --inplace '. as $item ireduce ({}; . * $item )' /tmp/generated-config.yml circle-ci-node-ecs-orb/workflows/deploy-app-only.yml .circleci/app.yml
-fi
+# shellcheck disable=SC2016
+yq eval-all --inplace '. as $item ireduce ({}; . * $item )' /tmp/generated-config.yml circle-ci-node-ecs-orb/workflows/deploy.yml circle-ci-node-ecs-orb/workflows/jobs-tf.yml .circleci/app.yml
 
 # Remove test_acceptance from workflow if not present in app.yml
 test_acceptance=$(yq eval '.jobs.test_acceptance' .circleci/app.yml)
