@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-if [ -z "$ACCOUNT_ID" ]
+if [ -z "$AWS_ACCOUNT_ID" ]
 then
-      echo "ACCOUNT_ID variable is empty"
+      echo "AWS_ACCOUNT_ID variable is empty"
       exit 1
 fi
 
@@ -21,7 +21,7 @@ fi
 AWS_PROFILE=assumed-role
 AWS_USERNAME=$(aws sts get-caller-identity | jq .Arn | xargs | sed 's/^.*\///')
 
-temp_role=$(aws sts assume-role --duration-seconds "$DURATION" --role-arn "arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}" --role-session-name "${AWS_USERNAME}-$(date +%F-%H-%M-%S)-session")
+temp_role=$(aws sts assume-role --duration-seconds "$DURATION" --role-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${ROLE_NAME}" --role-session-name "${AWS_USERNAME}-$(date +%F-%H-%M-%S)-session")
 
 AWS_ACCESS_KEY_ID=$(echo "$temp_role" | jq .Credentials.AccessKeyId | xargs)
 AWS_SECRET_ACCESS_KEY=$(echo "$temp_role" | jq .Credentials.SecretAccessKey | xargs)

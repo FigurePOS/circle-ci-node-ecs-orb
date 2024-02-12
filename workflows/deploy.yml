@@ -22,10 +22,25 @@ workflows:
       - test_unit:
           context:
             - node
+      - terraform_validate:
+          context:
+            - node
+      - terraform_plan_dev:
+          context:
+            - node
+          requires:
+            - terraform_validate
+      - terraform_plan_prod:
+          context:
+            - node
+          requires:
+            - terraform_validate
+
       - push:
           context:
             - node
           requires:
+            - terraform_plan_dev
             - test_acceptance
             - test_e2e
             - test_ui
@@ -33,29 +48,30 @@ workflows:
           filters:
             branches:
               only:
-                - master
-
-      - deploy_development:
+                - master      
+      - terraform_deploy_dev:
           context:
             - node
           requires:
             - push
           filters:
             branches:
-              only:
-                - master
-      - approve_deploy_production:
-          context:
-            - node
+              only: master
+      
+      - approve_deploy_prod:
           type: approval
           requires:
             - push
+            - terraform_plan_prod
+            - terraform_apply_dev
           filters:
             branches:
-              only:
-                - master
-      - deploy_production:
+              only: master
+      - terraform_deploy_prod:
           context:
             - node
           requires:
-            - approve_deploy_production
+            - approve_deploy_prod
+          filters:
+            branches:
+              only: master

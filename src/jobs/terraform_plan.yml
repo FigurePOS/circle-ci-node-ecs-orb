@@ -4,7 +4,7 @@ description: >
 executor: small
 
 parameters:
-  account_id:
+  aws_account_id:
     type: string
     description: "AWS Account ID"
   aws_region:
@@ -15,6 +15,10 @@ parameters:
     type: string
     description: "Name of S3 Bucket with terraform state"
     default: ""
+  deployment_tag:
+    type: string
+    description: "Tag of the deployment (abbreviated git commit hash)"
+    default: ""
   dir:
     type: string
     default: "tf"
@@ -22,6 +26,10 @@ parameters:
   env:
     type: string
     description: "Environment"
+  git_commit_hash:
+    type: string
+    description: "Git commit hash of the code"
+    default: ""
   service_name:
     type: string
     description: "Name of the service"
@@ -32,10 +40,12 @@ parameters:
 
 steps:
   - terraform_plan:
-      account_id: <<parameters.account_id>>
+      aws_account_id: <<parameters.aws_account_id>>
       aws_region: <<parameters.aws_region>>
       bucket_name: <<parameters.bucket_name>>
+      deployment_tag: <<parameters.deployment_tag>>
       dir: <<parameters.dir>>
       env: <<parameters.env>>
+      git_commit_hash: <<parameters.git_commit_hash>>
       service_name: <<parameters.service_name>>
       ssh_key_fingerprint: <<parameters.ssh_key_fingerprint>>

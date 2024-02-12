@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout
       - node-ecs/terraform_plan:
-          account_id: "880892332156"
+          aws_account_id: "880892332156"
           db_tunnel_mapping: "5432:main_database_host"
           dir: test
           env: development
@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - node-ecs/terraform_validate:
-          account_id: "880892332156"
+          aws_account_id: "880892332156"
           dir: test
           env: development
           service_name: "circle-ci-terraform-orb"
@@ -50,7 +50,7 @@ jobs:
     steps:
       - checkout
       - node-ecs/terraform_deploy:
-          account_id: "880892332156"
+          aws_account_id: "880892332156"
           db_tunnel_mapping: "5432:main_database_host"
           dir: test
           env: development
