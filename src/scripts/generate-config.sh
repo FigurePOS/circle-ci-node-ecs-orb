@@ -36,18 +36,6 @@ if [ "$push" = "null" ]; then
     exit 1
 fi
 
-deploy_development=$(yq eval '.jobs.deploy_development' .circleci/app.yml)
-if [ "$deploy_development" = "null" ]; then
-    echo "Config .circleci/app.yml does not contain 'deploy_development' job"
-    exit 1
-fi
-
-deploy_production=$(yq eval '.jobs.deploy_production' .circleci/app.yml)
-if [ "$deploy_production" = "null" ]; then
-    echo "Config .circleci/app.yml does not contain 'deploy_production' job"
-    exit 1
-fi
-
 git clone --depth 1 --no-checkout --branch "$TF_WORKFLOW_GIT_REF" --single-branch git@github.com:FigurePOS/circle-ci-node-ecs-orb.git
 cd circle-ci-node-ecs-orb || exit
 git sparse-checkout set workflows
