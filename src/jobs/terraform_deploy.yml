@@ -21,8 +21,8 @@ parameters:
     default: ""
   dir:
     type: string
-    default: "tf"
     description: "Dir with terraform scripts"
+    default: "tf"
   git_commit_hash:
     type: string
     description: "Git commit hash of the code"
@@ -35,8 +35,8 @@ parameters:
     description: "Name of the service"
   ssh_key_fingerprint:
     type: string
-    default: ""
     description: "SSH Key Fingerprint"
+    default: ""
 
 steps:
   - terraform_deploy:
