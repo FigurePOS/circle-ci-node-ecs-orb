@@ -21,8 +21,8 @@ parameters:
     default: ""
   dir:
     type: string
-    default: "tf"
     description: "Dir with terraform scripts"
+    default: "tf"
   env:
     type: string
     description: "Environment"
