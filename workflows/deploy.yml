@@ -48,7 +48,7 @@ workflows:
           filters:
             branches:
               only:
-                - master      
+                - master
       - terraform_deploy_dev:
           context:
             - node
@@ -57,13 +57,13 @@ workflows:
           filters:
             branches:
               only: master
-      
+
       - approve_deploy_prod:
           type: approval
           requires:
             - push
             - terraform_plan_prod
-            - terraform_apply_dev
+            - terraform_deploy_dev
           filters:
             branches:
               only: master
