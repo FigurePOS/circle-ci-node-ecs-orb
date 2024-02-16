@@ -44,7 +44,7 @@ else
         echo "Error running terraform plan"
         exit 1
     fi
-    terraform show --no-color /tmp/"$ENV"-tfplan.binary > /tmp/"$ENV"-plan.txt
+    terraform show -no-color /tmp/"$ENV"-tfplan.binary > /tmp/"$ENV"-plan.txt
 fi
 
 export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
