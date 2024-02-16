@@ -39,7 +39,7 @@ then
     echo "No changes detected."
     echo "No changes detected." > /tmp/"$ENV"-plan.txt
 else
-    if $? -eq 2;
+    if [ $? -eq 1 ]
     then
         echo "Error running terraform plan"
         exit 1
