@@ -50,7 +50,13 @@ fi
 export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
 if [ -z "$CIRCLE_PR_NUMBER" ]; then echo "Not a pull request - aborting"; exit 0; fi
 
-COMMENT_TPL="Output from **${ENV}** \`terraform plan\`\n\`\`\`\n{{.}}\n\`\`\`"
+COMMENT_TPL=$(cat <<EOF
+Output from **${ENV}** \`terraform plan\`:
+\`\`\`
+{{.}}
+\`\`\`
+EOF
+)
 
 github-commenter \
     -owner "${CIRCLE_PROJECT_USERNAME}" \
