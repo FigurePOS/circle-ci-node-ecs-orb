@@ -1,5 +1,5 @@
 description: >
   Executor for more demanding jobs.
 docker:
-  - image: 'figurepos/aws-node-terraform:3d04fa9'
+  - image: 'figurepos/aws-node-terraform:ca354b2'
 resource_class: large
