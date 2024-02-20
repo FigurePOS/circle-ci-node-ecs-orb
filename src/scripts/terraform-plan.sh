@@ -38,6 +38,13 @@ then
     rm -rf /tmp/"$ENV"-tfplan.binary
     echo "No changes detected."
     echo "No changes detected." > /tmp/"$ENV"-plan.txt
+    COMMENT_TPL=$(cat <<EOF
+Output from **${ENV}** \`terraform plan\`:
+\`\`\`
+{{.}}
+\`\`\`
+EOF
+)
 else
     if [ $? -eq 1 ]
     then
@@ -45,18 +52,25 @@ else
         exit 1
     fi
     terraform show -no-color /tmp/"$ENV"-tfplan.binary > /tmp/"$ENV"-plan.txt
+
+    COMMENT_TPL=$(cat <<EOF
+Output from **${ENV}** \`terraform plan\`:
+
+<details>
+
+<summary>$(grep "Plan: " /tmp/"${ENV}"-plan.txt)</summary>
+
+\`\`\`
+{{.}}
+\`\`\`
+
+</details>
+EOF
+)
 fi
 
 export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
 if [ -z "$CIRCLE_PR_NUMBER" ]; then echo "Not a pull request - aborting"; exit 0; fi
-
-COMMENT_TPL=$(cat <<EOF
-Output from **${ENV}** \`terraform plan\`:
-\`\`\`
-{{.}}
-\`\`\`
-EOF
-)
 
 github-commenter \
     -owner "${CIRCLE_PROJECT_USERNAME}" \
