@@ -37,7 +37,7 @@ if terraform plan -detailed-exitcode --out /tmp/"$ENV"-tfplan.binary;
 then
     rm -rf /tmp/"$ENV"-tfplan.binary
     echo "No changes detected."
-    echo "No changes detected." > /tmp/"$ENV"-plan.txt
+    echo -n "No changes detected." > /tmp/"$ENV"-plan.txt
     COMMENT_TPL=$(cat <<EOF
 Output from **${ENV}** \`terraform plan\`:
 \`\`\`

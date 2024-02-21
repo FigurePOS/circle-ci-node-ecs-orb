@@ -49,6 +49,8 @@ jobs:
           env: development
           service_name: <<pipeline.parameters.service_name>>
           ssh_key_fingerprint: <<pipeline.parameters.ssh_key_fingerprint>>
+      - node-ecs/buddy_notify_deploy:
+          service_name: << pipeline.parameters.service_name >>      
       - node-ecs/slack_notify_fail_master:
           service_name: <<pipeline.parameters.service_name>>
 
