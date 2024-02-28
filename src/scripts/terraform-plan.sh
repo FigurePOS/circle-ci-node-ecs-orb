@@ -76,7 +76,7 @@ github-commenter \
     -owner "${CIRCLE_PROJECT_USERNAME}" \
     -repo "${CIRCLE_PROJECT_REPONAME}" \
     -number "$CIRCLE_PR_NUMBER" \
-    -delete-comment-regex "Output from \*\*${ENV}\*\*" \
+    -edit-comment-regex "Output from \*\*${ENV}\*\* \`terraform plan\`" \
     -type pr \
     -template "$COMMENT_TPL" < /tmp/"$ENV"-plan.txt
 
