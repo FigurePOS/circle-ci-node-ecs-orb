@@ -24,6 +24,10 @@ parameters:
   env:
     type: string
     description: "Environment"
+  export_timescale_credentials:
+    type: string
+    description: "Export timescale credentials"
+    default: ""
   git_commit_hash:
     type: string
     description: "Git commit hash of the code"
@@ -41,6 +45,7 @@ steps:
         BUCKET_NAME: <<parameters.bucket_name>>
         DIR: <<parameters.dir>>
         ENV: "development"
+        EXPORT_TIMESCALE_CREDENTIALS: <<parameters.export_timescale_credentials>>
         ROLE_NAME: "TerraformDeployer"
         SCRIPT_ASSUME: <<include(scripts/aws-assume.sh)>>
         SCRIPT_SET_VARS: <<include(scripts/set-variables.sh)>>
