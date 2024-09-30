@@ -1,16 +1,34 @@
 description: >
   Run `yarn build` with caching node_modules.
 
+parameters:
+  nextjs:
+    description: "Cache Next.js build files"
+    type: boolean
+    default: false
+
 steps:
   - restore_cache:
       key: build-dev-yarn-deps-{{ checksum "yarn.lock" }}
   - node/install-packages:
       pkg-manager: yarn
       with-cache: false
-  - save_cache:
-      key: build-dev-yarn-deps-{{ checksum "yarn.lock" }}
-      paths:
-        - node_modules
+  - when:
+      condition: nextjs
+      steps:
+        - save_cache:
+            key: build-dev-yarn-deps-{{ checksum "yarn.lock" }}
+            paths:
+              - .next
+              - node_modules
+  - when:
+      condition:
+        not: nextjs
+      steps:
+        - save_cache:
+            key: build-dev-yarn-deps-{{ checksum "yarn.lock" }}
+            paths:
+              - node_modules
   - run:
       name: "Yarn build"
       command: yarn build
