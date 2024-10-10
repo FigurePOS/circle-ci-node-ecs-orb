@@ -72,6 +72,12 @@ fi
 export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
 if [ -z "$CIRCLE_PR_NUMBER" ]; then echo "Not a pull request - aborting"; exit 0; fi
 
+if [ "$(stat -c%s /tmp/"$ENV"-plan.txt)" -gt 50000 ]; then
+      echo "The plan is too large, truncating..."
+      head -c 50000 /tmp/"$ENV"-plan.txt > /tmp/"$ENV"-plan.txt.tmp
+      mv /tmp/"$ENV"-plan.txt.tmp /tmp/"$ENV"-plan.txt
+fi
+
 github-commenter \
     -owner "${CIRCLE_PROJECT_USERNAME}" \
     -repo "${CIRCLE_PROJECT_REPONAME}" \
